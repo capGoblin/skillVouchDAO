@@ -15,8 +15,9 @@ contract UserRequestContract {
         string project;
         string experience;
         uint256 stakeAmountByUser;
-        mapping(address => uint256) stakeAmountByVouchers;
+        // mapping(address => uint256) stakeAmountByVouchers;
         RequestStatus status;
+        uint256 creationTime;
     }
 
     mapping(uint256 => UserRequest) public userRequests;
@@ -33,12 +34,25 @@ contract UserRequestContract {
     function createRequest(string memory _skill, string memory _project, string memory _experience, uint256 _stakeAmount) external {
         require(_stakeAmount > 0, "Stake amount must be greater than 0");
 
-        userRequests[nextRequestId] = UserRequest(msg.sender, _skill, _project, _experience, _stakeAmount, 0, RequestStatus.VouchingProcess);
+        // userRequests[nextRequestId] = UserRequest(msg.sender, new address[](0), 0, _skill, _project, _experience, _stakeAmount, RequestStatus.VouchingProcess, block.timestamps);
+
+        userRequests[nextRequestId] = UserRequest({
+            user: msg.sender,
+            vouched: new address[](0),
+            vouchedCount: 0,
+            skill: _skill,
+            project: _project,
+            experience: _experience,
+            stakeAmountByUser: _stakeAmount,
+            status: RequestStatus.VouchingProcess,
+            creationTime: block.timestamp 
+        });
+
         
         userToRequests[msg.sender].push(nextRequestId);
 
 
-        tokenContract.transferFrom(msg.sender, address(this), stakedAmount);
+        tokenContract.transferFrom(msg.sender, address(this), _stakeAmount);
         
         emit RequestCreated(nextRequestId, msg.sender, _skill, _project, _experience, _stakeAmount, RequestStatus.VouchingProcess);
         nextRequestId++;

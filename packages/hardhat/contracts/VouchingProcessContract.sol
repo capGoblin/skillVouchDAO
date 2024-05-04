@@ -4,8 +4,8 @@ pragma solidity ^0.8.0;
 import "./TokenContract.sol";
 import "./UserRequestContract.sol";
 
-contract VouchingProcessContract {
-    TokenContract public tokenContract;
+contract VouchingProcessContract is UserRequestContract {
+    TokenContract public override tokenContract;
     UserRequestContract public userRequestContract;
 
     uint256 stakedAmount = 19;
@@ -24,28 +24,29 @@ contract VouchingProcessContract {
     }
 
     function vouchForSkill(uint256 _requestId) external {
-        require(userRequestContract.userRequests(_requestId).status == UserRequestContract.RequestStatus.VouchingProcess, "Request is not in Vouching Process phase");
-        require(!_hasVouched(userRequestContract.userRequests(_requestId).vouched, msg.sender), "Voucher has already vouched for this request");
+        userRequests[_requestId].status == UserRequestContract.RequestStatus.VouchingProcess ;
+        require(userRequests[_requestId].status == UserRequestContract.RequestStatus.VouchingProcess, "Request is not in Vouching Process phase");
+        require(!_hasVouched(userRequests[_requestId].vouched, msg.sender), "Voucher has already vouched for this request");
 
         
         tokenContract.transferFrom(msg.sender, address(userRequestContract), stakedAmount);
 
-        userRequestContract.userRequests(_requestId).vouched.push(msg.sender);
-        userRequestContract.userRequests(_requestId).vouchedCount++;
+        userRequests[_requestId].vouched.push(msg.sender);
+        userRequests[_requestId].vouchedCount++;
         emit SkillVouched(_requestId, msg.sender, stakedAmount);
     }
 
 
     function moveRequestToCommunityValidation(uint256 _requestId) external {
-        require(userRequestContract.userRequests(_requestId).status == UserRequestContract.RequestStatus.VouchingProcess, "Request is not in Vouching Process phase");
-        require(block.timestamp >= userRequestContract.userRequests(_requestId).creationTime + vouchingTimeLimit, "Vouching time limit not reached");
+        require(userRequests[_requestId].status == RequestStatus.VouchingProcess, "Request is not in Vouching Process phase");
+        require(block.timestamp >= userRequests[_requestId].creationTime + vouchingTimeLimit, "Vouching time limit not reached");
 
-        userRequestContract.transitionRequestStatus(_requestId, UserRequestContract.RequestStatus.CommunityValidation);
+        userRequestContract.transitionRequestStatus(_requestId, RequestStatus.CommunityValidation);
         emit RequestMovedToCommunityValidation(_requestId);
     }
 
 
-    function _hasVouched(address[] vouchedAddresses, address vouchor) internal pure returns (bool) {
+    function _hasVouched(address[] memory vouchedAddresses, address vouchor) internal pure returns (bool) {
         for (uint i = 0; i < vouchedAddresses.length; i++) {
             if (vouchedAddresses[i] == vouchor) {
                 return true;

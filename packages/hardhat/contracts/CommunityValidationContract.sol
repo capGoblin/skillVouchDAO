@@ -4,8 +4,8 @@ pragma solidity ^0.8.0;
 import "./TokenContract.sol";
 import "./UserRequestContract.sol";
 
-contract CommunityValidationContract {
-    TokenContract public tokenContract;
+contract CommunityValidationContract is UserRequestContract {
+    TokenContract public override tokenContract;
     UserRequestContract public userRequestContract;
 
     mapping(uint256 => mapping(address => bool)) public voted;
@@ -14,6 +14,8 @@ contract CommunityValidationContract {
 
     uint256 public votingTimeLimit;
     uint256 public issueVotingTimeLimit;
+    uint256 stakedAmount = 19;
+
 
     event VoteCasted(uint256 requestId, address voter, bool acceptance);
     event RequestClosed(uint256 requestId, bool accepted);
@@ -26,7 +28,7 @@ contract CommunityValidationContract {
     }
 
     function castVote(uint256 _requestId, bool _acceptance) external {
-        require(userRequestContract.userRequests(_requestId).status == UserRequestContract.RequestStatus.CommunityValidation, "Request is not in Community Validation phase");
+        require(userRequests[_requestId].status == UserRequestContract.RequestStatus.CommunityValidation, "Request is not in Community Validation phase");
         require(!voted[_requestId][msg.sender], "Voter has already casted vote for this request");
 
         if (_acceptance) {
@@ -39,8 +41,8 @@ contract CommunityValidationContract {
     }
 
     function closeRequest(uint256 _requestId) external {
-        require(userRequestContract.userRequests(_requestId).status == UserRequestContract.RequestStatus.CommunityValidation, "Request is not in Community Validation phase");
-        require(block.timestamp >= userRequestContract.userRequests(_requestId).creationTime + votingTimeLimit, "Voting time limit not reached");
+        require(userRequests[_requestId].status == UserRequestContract.RequestStatus.CommunityValidation, "Request is not in Community Validation phase");
+        require(block.timestamp >= userRequests[_requestId].creationTime + votingTimeLimit, "Voting time limit not reached");
 
         if (acceptVotes[_requestId] > rejectVotes[_requestId]) {
             distributeRewards(_requestId);
@@ -53,25 +55,25 @@ contract CommunityValidationContract {
     }
 
     function distributeRewards(uint256 _requestId) internal {
-        UserRequest request = userRequestContract.userRequests(_requestId);
+        UserRequest memory request = userRequests[_requestId];
 
         tokenContract.transfer(request.user, request.stakeAmountByUser);
 
         for (uint256 i = 0; i < request.vouched.length; i++) {
             address vouchor = request.vouched[i];
-            tokenContract.transfer(vouchor, request.stakeAmountByVouchers[vouchor]);
+            tokenContract.transfer(vouchor, stakedAmount);
         }
 
     }
 
     function distributePenalties(uint256 _requestId) internal {
-        UserRequest request = userRequestContract.userRequests(_requestId);
+        UserRequest memory request = userRequests[_requestId];
 
         tokenContract.transfer(address(0), request.stakeAmountByUser);
 
         for (uint256 i = 0; i < request.vouched.length; i++) {
             address vouchor = request.vouched[i];
-            tokenContract.transfer(address(0), request.stakeAmountByVouchers[vouchor]);
+            tokenContract.transfer(address(0), stakedAmount);
         }
 
     }
