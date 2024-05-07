@@ -6,7 +6,8 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 contract TokenContract is ERC20 {
     address public owner;
 
-    constructor() ERC20("SkillVouch Token", "SVT") {
+    constructor() ERC20("SkillVouch Token", "SVT")
+ {
         owner = msg.sender;
     }
 
@@ -15,8 +16,8 @@ contract TokenContract is ERC20 {
         _;
     }
 
-    function mint(address account, uint256 amount) external onlyOwner {
-        _mint(account, amount);
+    function mint(uint256 amount) external onlyOwner {
+        _mint(msg.sender, amount);
     }
 
     function burn(address account, uint256 amount) external onlyOwner {
@@ -24,12 +25,19 @@ contract TokenContract is ERC20 {
     }
 
     function transfer(address recipient, uint256 amount) public override returns (bool) {
-        require(recipient != address(0), "Transfer to zero address");
+        // require(recipient != address(0), "Transfer to zero address");
         return super.transfer(recipient, amount);
     }
 
+    // function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
+    //     // require(recipient != address(0), "Transfer to zero address");
+    //     return super.transferFrom(sender, recipient, amount);
+    // }
+
     function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
-        require(recipient != address(0), "Transfer to zero address");
-        return super.transferFrom(sender, recipient, amount);
+        // require(recipient != address(0), "Transfer to zero address");
+        _transfer(sender, recipient, amount);
+        return true;
     }
+
 }
