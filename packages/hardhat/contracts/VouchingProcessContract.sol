@@ -1,15 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./TokenContract.sol";
 import "./UserRequestContract.sol";
 import "./UserRequestStruct.sol";
 
-contract VouchingProcessContract is UserRequestStruct {
-    // TokenContract tokenContract = new TokenContract();
-    UserRequestContract userRequestContract = new UserRequestContract();
+contract VouchingProcessContract {
+    UserRequestContract userRequestContract; 
+    UserRequestStruct userRequestStruct;
 
-    uint256 stakedAmount = 19;
+    uint256 stakedAmount = 20;
     uint256 public vouchingTimeLimit;
 
     mapping(uint256 => mapping(address => bool)) public vouched;
@@ -18,32 +17,28 @@ contract VouchingProcessContract is UserRequestStruct {
     event SkillVouched(uint256 requestId, address vouchor, uint256 stakedAmount);
     event RequestMovedToCommunityValidation(uint256 requestId);
 
-    constructor(uint256 _vouchingTimeLimit) {
-        // tokenContract = TokenContract(_tokenContractAddress);
-        // userRequestContract = UserRequestContract(_userRequestContractAddress);
-        vouchingTimeLimit = _vouchingTimeLimit;
+    constructor(address _userRequestContractAddress, address _userRequestStructAddress) {
+        userRequestContract = UserRequestContract(_userRequestContractAddress);
+        userRequestStruct = UserRequestStruct(_userRequestStructAddress);
     }
+    
 
     function vouchForSkill(uint256 _requestId) external {
-        // UserRequestStruct.UserRequest memory ur = UserRequestStruct.userRequests[_requestId];
-
-        require(UserRequestStruct.userRequests[_requestId].status == UserRequestStruct.RequestStatus.VouchingProcess, "Request is not in Vouching Process phase");
-        require(!_hasVouched(UserRequestStruct.userRequests[_requestId].vouched, msg.sender), "Voucher has already vouched for this request");
-
+        require(userRequestStruct.isRequestPresent(_requestId), "Request not found");
+        require(userRequestStruct.get(_requestId).status == 0, "Request is not in Vouching Process");
+        require(!_hasVouched(userRequestStruct.get(_requestId).vouched, msg.sender), "Voucher has already vouched for this request");
         
-        UserRequestStruct.tokenContract.transferFrom(msg.sender, address(userRequestContract), stakedAmount);
+        userRequestStruct.tokenContract().transferFrom(msg.sender, address(userRequestContract), stakedAmount);
 
-        UserRequestStruct.userRequests[_requestId].vouched.push(msg.sender);
-        UserRequestStruct.userRequests[_requestId].vouchedCount++;
+        userRequestStruct.addVoucher(_requestId, msg.sender);
         emit SkillVouched(_requestId, msg.sender, stakedAmount);
     }
 
 
     function moveRequestToCommunityValidation(uint256 _requestId) external {
-        require(UserRequestStruct.userRequests[_requestId].status == UserRequestStruct.RequestStatus.VouchingProcess, "Request is not in Vouching Process phase");
-        require(block.timestamp >= UserRequestStruct.userRequests[_requestId].creationTime + vouchingTimeLimit, "Vouching time limit not reached");
+        require(userRequestStruct.get(_requestId).status == 0, "Request is not in Vouching Process phase");
 
-        userRequestContract.transitionRequestStatus(_requestId, UserRequestStruct.RequestStatus.CommunityValidation);
+        userRequestContract.transitionRequestStatus(_requestId, 1);
         emit RequestMovedToCommunityValidation(_requestId);
     }
 

@@ -68,73 +68,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "tokenContract",
-				"outputs": [
-					{
-						"internalType": "contract TokenContract",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "userRequests",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "user",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "vouchedCount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "skill",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "project",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "experience",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "stakeAmountByUser",
-						"type": "uint256"
-					},
-					{
-						"internalType": "enum UserRequestStruct.RequestStatus",
-						"name": "status",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint256",
-						"name": "creationTime",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -280,27 +213,27 @@
 			]
 		},
 		"packages/hardhat/contracts/UserRequestContract.sol": {
-			"keccak256": "0x5116df08b0afdde4b46eb5405db6642b637698c1ce246eefe24ff08774fc34a4",
+			"keccak256": "0x122ffc20a5b3f25f7b7e57263479a96ce2621f3b0825d6a0db60bd1a6fb9c63e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b87ab0dae004eeab75c7f14d7caeab9779edb31cc0f74471eeb49c5bb3ba31c6",
-				"dweb:/ipfs/QmSowfc9U4uMRaf1Xa7WZ8wEWidQUFVyCPkxW25U6euNbk"
+				"bzz-raw://f50e163af9ebf8066215159408f89300d701dcfe94c520ec3d6f014f9d385fb2",
+				"dweb:/ipfs/QmR84mpzCEk879EEw4dvTWqkBet8P46HuX9ivtujRzsbei"
 			]
 		},
 		"packages/hardhat/contracts/UserRequestStruct.sol": {
-			"keccak256": "0xd6908b9557e2ddec424b33fa46a2755b8d1bf55ef824c7bb39f85ffc6bc2e599",
+			"keccak256": "0x6bd6d65b3e952df01f3b822df6a97d70aaede6a9d4f7fa951b1dca35018807ea",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b64b990d7c1e41f52d4350e71edb509fa2b679da41e6f6122ace0da4d5fbcbaa",
-				"dweb:/ipfs/Qmbbns5xFne86rd8mcA3Tq8ABqB9aJs4bbdWy38qnMMAXQ"
+				"bzz-raw://79523abaa9c854b49dcc2c73dad5e4041b9f0aaa913504e8aedc5952297935a5",
+				"dweb:/ipfs/QmUu9VoqHaeeVQH83qKpbDmxEoeGuSSYV7wF9nyjvRNZqF"
 			]
 		},
 		"packages/hardhat/contracts/VouchingProcessContract.sol": {
-			"keccak256": "0x476dc8965450f5e26acf25456cadb14bed046ecd273209d7b76f7cd18d188a4d",
+			"keccak256": "0xbde5dae48086e62806d0b5c546cb7d2c8b4d16cd6f54a8e5462826d2d66b1e5b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://d2fbd13377e56b1d4e30705e93306363b97333544720e6047d8a182762196c94",
-				"dweb:/ipfs/QmdaKSwYg5RiM6SFfkYdinhN36brHULJfALha9o7LsD7Ai"
+				"bzz-raw://6c21f681abec58e62c92ddde503b1283d1490f52acf63fc22a69c6748c9eaa95",
+				"dweb:/ipfs/QmNouUZRpFEJFfHTdAV15884ovzK8WhuZcEWWtRchghz39"
 			]
 		}
 	},

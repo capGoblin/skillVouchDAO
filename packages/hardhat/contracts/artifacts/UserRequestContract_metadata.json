@@ -51,7 +51,7 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "enum UserRequestStruct.RequestStatus",
+						"internalType": "enum UserRequestContract.RequestStatus",
 						"name": "status",
 						"type": "uint8"
 					}
@@ -70,7 +70,7 @@
 					},
 					{
 						"indexed": false,
-						"internalType": "enum UserRequestStruct.RequestStatus",
+						"internalType": "enum UserRequestContract.RequestStatus",
 						"name": "status",
 						"type": "uint8"
 					}
@@ -103,7 +103,7 @@
 				],
 				"name": "createRequest",
 				"outputs": [],
-				"stateMutability": "nonpayable",
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -120,19 +120,6 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "tokenContract",
-				"outputs": [
-					{
-						"internalType": "contract TokenContract",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -140,7 +127,7 @@
 						"type": "uint256"
 					},
 					{
-						"internalType": "enum UserRequestStruct.RequestStatus",
+						"internalType": "enum UserRequestContract.RequestStatus",
 						"name": "_newStatus",
 						"type": "uint8"
 					}
@@ -148,79 +135,6 @@
 				"name": "transitionRequestStatus",
 				"outputs": [],
 				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "userRequests",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "user",
-						"type": "address"
-					},
-					{
-						"internalType": "uint256",
-						"name": "vouchedCount",
-						"type": "uint256"
-					},
-					{
-						"internalType": "string",
-						"name": "skill",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "project",
-						"type": "string"
-					},
-					{
-						"internalType": "string",
-						"name": "experience",
-						"type": "string"
-					},
-					{
-						"internalType": "uint256",
-						"name": "stakeAmountByUser",
-						"type": "uint256"
-					},
-					{
-						"internalType": "enum UserRequestStruct.RequestStatus",
-						"name": "status",
-						"type": "uint8"
-					},
-					{
-						"internalType": "uint256",
-						"name": "creationTime",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"name": "userRequests1",
-				"outputs": [
-					{
-						"internalType": "string",
-						"name": "",
-						"type": "string"
-					}
-				],
-				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -324,19 +238,19 @@
 			]
 		},
 		"packages/hardhat/contracts/UserRequestContract.sol": {
-			"keccak256": "0x28d68487c91f8eb1fc32b4f2678771a819b20bbf227cf1adc33fab69b87560e9",
+			"keccak256": "0x122ffc20a5b3f25f7b7e57263479a96ce2621f3b0825d6a0db60bd1a6fb9c63e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://8593a7c44808128cc119c2f76a476d1dcd224558de1e9e5837df5b5e8b5a2e50",
-				"dweb:/ipfs/QmZMPzfyJuRKjRTvrUCcS4GMyHM4CTgFmoXfKaRSa46kuZ"
+				"bzz-raw://f50e163af9ebf8066215159408f89300d701dcfe94c520ec3d6f014f9d385fb2",
+				"dweb:/ipfs/QmR84mpzCEk879EEw4dvTWqkBet8P46HuX9ivtujRzsbei"
 			]
 		},
 		"packages/hardhat/contracts/UserRequestStruct.sol": {
-			"keccak256": "0x97f4e9b6ceaa5a814c38a9dc6dacd11b7ed58767c10fbd1bc1a937c26a419ff7",
+			"keccak256": "0x6bd6d65b3e952df01f3b822df6a97d70aaede6a9d4f7fa951b1dca35018807ea",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://cc1a68e5087460639eff2d32d14fb13bf247c490101aa038551bacd9a269430c",
-				"dweb:/ipfs/QmSxH5WzueyR14bCRhCoMdBuRcjB1Zq91qm3oWE9Bcjvva"
+				"bzz-raw://79523abaa9c854b49dcc2c73dad5e4041b9f0aaa913504e8aedc5952297935a5",
+				"dweb:/ipfs/QmUu9VoqHaeeVQH83qKpbDmxEoeGuSSYV7wF9nyjvRNZqF"
 			]
 		}
 	},

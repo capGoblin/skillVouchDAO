@@ -24,18 +24,20 @@ contract TokenContract is ERC20 {
         _burn(account, amount);
     }
 
+    function burnFrom(address account, uint256 amount) public {
+        uint256 currentAllowance = allowance(account, msg.sender);
+        require(currentAllowance >= amount, "ERC20: burn amount exceeds allowance");
+        _approve(account, msg.sender, currentAllowance - amount);
+        _burn(account, amount);
+    }
+
     function transfer(address recipient, uint256 amount) public override returns (bool) {
-        // require(recipient != address(0), "Transfer to zero address");
+        require(recipient != address(0), "Transfer to zero address");
         return super.transfer(recipient, amount);
     }
 
-    // function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
-    //     // require(recipient != address(0), "Transfer to zero address");
-    //     return super.transferFrom(sender, recipient, amount);
-    // }
-
     function transferFrom(address sender, address recipient, uint256 amount) public override returns (bool) {
-        // require(recipient != address(0), "Transfer to zero address");
+        require(recipient != address(0), "Transfer to zero address");
         _transfer(sender, recipient, amount);
         return true;
     }

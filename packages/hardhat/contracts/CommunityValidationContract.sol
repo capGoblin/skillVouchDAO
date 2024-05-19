@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./TokenContract.sol";
 import "./UserRequestContract.sol";
 import "./UserRequestStruct.sol";
 
-contract CommunityValidationContract is UserRequestStruct {
-    UserRequestContract public userRequestContract;
+contract CommunityValidationContract {
+    UserRequestContract userRequestContract; 
+    UserRequestStruct userRequestStruct;
 
     mapping(uint256 => mapping(address => bool)) public voted;
     mapping(uint256 => uint256) public acceptVotes;
@@ -14,20 +14,22 @@ contract CommunityValidationContract is UserRequestStruct {
 
     uint256 public votingTimeLimit;
     uint256 public issueVotingTimeLimit;
-    uint256 stakedAmount = 19;
+    uint256 stakedAmount = 20;
 
 
     event VoteCasted(uint256 requestId, address voter, bool acceptance);
     event RequestClosed(uint256 requestId, bool accepted);
+    event RequestMovedToClosedPhase(uint256 requestId);
 
-    constructor(address _userRequestContractAddress, uint256 _votingTimeLimit) {
+
+    constructor(address _userRequestContractAddress, address _userRequestStructAddress) {
         userRequestContract = UserRequestContract(_userRequestContractAddress);
-        votingTimeLimit = _votingTimeLimit;
-        issueVotingTimeLimit = _votingTimeLimit / 2;
+        userRequestStruct = UserRequestStruct(_userRequestStructAddress);
     }
 
     function castVote(uint256 _requestId, bool _acceptance) external {
-        require(userRequests[_requestId].status == UserRequestStruct.RequestStatus.CommunityValidation, "Request is not in Community Validation phase");
+        require(userRequestStruct.isRequestPresent(_requestId), "Request not found");
+        require(userRequestStruct.get(_requestId).status == 1, "Request is not in Community Validation phase");
         require(!voted[_requestId][msg.sender], "Voter has already casted vote for this request");
 
         if (_acceptance) {
@@ -40,8 +42,8 @@ contract CommunityValidationContract is UserRequestStruct {
     }
 
     function closeRequest(uint256 _requestId) external {
-        require(userRequests[_requestId].status == UserRequestStruct.RequestStatus.CommunityValidation, "Request is not in Community Validation phase");
-        require(block.timestamp >= userRequests[_requestId].creationTime + votingTimeLimit, "Voting time limit not reached");
+        require(userRequestStruct.isRequestPresent(_requestId), "Request not found");
+        require(userRequestStruct.get(_requestId).status == 1, "Request is not in Community Validation phase");
 
         if (acceptVotes[_requestId] > rejectVotes[_requestId]) {
             distributeRewards(_requestId);
@@ -50,31 +52,37 @@ contract CommunityValidationContract is UserRequestStruct {
             distributePenalties(_requestId);
             emit RequestClosed(_requestId, false);
         }
-        userRequestContract.transitionRequestStatus(_requestId, UserRequestStruct.RequestStatus.Closed);
+
+        userRequestContract.transitionRequestStatus(_requestId, 2);
     }
 
     function distributeRewards(uint256 _requestId) internal {
-        UserRequest memory request = userRequests[_requestId];
+        UserRequestStruct.UserRequest memory request = userRequestStruct.get(_requestId);
 
-        tokenContract.transfer(request.user, request.stakeAmountByUser);
+        userRequestStruct.tokenContract().transferFrom(address(userRequestContract), request.user, request.stakeAmountByUser);
 
         for (uint256 i = 0; i < request.vouched.length; i++) {
             address vouchor = request.vouched[i];
-            tokenContract.transfer(vouchor, stakedAmount);
+            userRequestStruct.tokenContract().transferFrom(address(userRequestContract), vouchor, stakedAmount);
+        }
+    }
+
+    function distributePenalties(uint256 _requestId) internal {
+        UserRequestStruct.UserRequest memory request = userRequestStruct.get(_requestId);
+
+        userRequestStruct.tokenContract().burnFrom(address(userRequestContract), request.stakeAmountByUser);
+
+        for (uint256 i = 0; i < request.vouched.length; i++) {
+            userRequestStruct.tokenContract().burnFrom(address(userRequestContract), stakedAmount);
         }
 
     }
 
-    function distributePenalties(uint256 _requestId) internal {
-        UserRequest memory request = userRequests[_requestId];
+    function moveRequestToClosedPhase(uint256 _requestId) external {
+        require(userRequestStruct.get(_requestId).status == 1, "Request is not in Community Validation phase");
 
-        tokenContract.transfer(address(0), request.stakeAmountByUser);
-
-        for (uint256 i = 0; i < request.vouched.length; i++) {
-            address vouchor = request.vouched[i];
-            tokenContract.transfer(address(0), stakedAmount);
-        }
-
+        userRequestContract.transitionRequestStatus(_requestId, 2);
+        emit RequestMovedToClosedPhase(_requestId);
     }
 
 }

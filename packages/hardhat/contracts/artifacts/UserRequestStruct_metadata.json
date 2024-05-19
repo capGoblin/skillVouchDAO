@@ -7,6 +7,211 @@
 		"abi": [
 			{
 				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"anonymous": false,
+				"inputs": [
+					{
+						"indexed": true,
+						"internalType": "uint256",
+						"name": "requestId",
+						"type": "uint256"
+					},
+					{
+						"indexed": true,
+						"internalType": "address",
+						"name": "user",
+						"type": "address"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "skill",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "project",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "string",
+						"name": "experience",
+						"type": "string"
+					},
+					{
+						"indexed": false,
+						"internalType": "uint256",
+						"name": "stakeAmount",
+						"type": "uint256"
+					},
+					{
+						"indexed": false,
+						"internalType": "enum UserRequestStruct.RequestStatus",
+						"name": "status",
+						"type": "uint8"
+					}
+				],
+				"name": "RequestAdded",
+				"type": "event"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "_user",
+						"type": "address"
+					},
+					{
+						"internalType": "address[]",
+						"name": "_vouched",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_vouchedCount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "string",
+						"name": "_skill",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_project",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "_experience",
+						"type": "string"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_stakeAmountByUser",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_creationTime",
+						"type": "uint256"
+					}
+				],
+				"name": "add",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "requestId",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_requestId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "voucher",
+						"type": "address"
+					}
+				],
+				"name": "addVoucher",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "requestId",
+						"type": "uint256"
+					}
+				],
+				"name": "get",
+				"outputs": [
+					{
+						"components": [
+							{
+								"internalType": "address",
+								"name": "user",
+								"type": "address"
+							},
+							{
+								"internalType": "address[]",
+								"name": "vouched",
+								"type": "address[]"
+							},
+							{
+								"internalType": "uint256",
+								"name": "vouchedCount",
+								"type": "uint256"
+							},
+							{
+								"internalType": "string",
+								"name": "skill",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "project",
+								"type": "string"
+							},
+							{
+								"internalType": "string",
+								"name": "experience",
+								"type": "string"
+							},
+							{
+								"internalType": "uint256",
+								"name": "stakeAmountByUser",
+								"type": "uint256"
+							},
+							{
+								"internalType": "enum UserRequestStruct.RequestStatus",
+								"name": "status",
+								"type": "uint8"
+							},
+							{
+								"internalType": "uint256",
+								"name": "creationTime",
+								"type": "uint256"
+							}
+						],
+						"internalType": "struct UserRequestStruct.UserRequest",
+						"name": "",
+						"type": "tuple"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "nextRequestId",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
 				"name": "tokenContract",
 				"outputs": [
 					{
@@ -149,11 +354,11 @@
 			]
 		},
 		"packages/hardhat/contracts/UserRequestStruct.sol": {
-			"keccak256": "0xd6908b9557e2ddec424b33fa46a2755b8d1bf55ef824c7bb39f85ffc6bc2e599",
+			"keccak256": "0x6bd6d65b3e952df01f3b822df6a97d70aaede6a9d4f7fa951b1dca35018807ea",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://b64b990d7c1e41f52d4350e71edb509fa2b679da41e6f6122ace0da4d5fbcbaa",
-				"dweb:/ipfs/Qmbbns5xFne86rd8mcA3Tq8ABqB9aJs4bbdWy38qnMMAXQ"
+				"bzz-raw://79523abaa9c854b49dcc2c73dad5e4041b9f0aaa913504e8aedc5952297935a5",
+				"dweb:/ipfs/QmUu9VoqHaeeVQH83qKpbDmxEoeGuSSYV7wF9nyjvRNZqF"
 			]
 		}
 	},
