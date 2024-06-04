@@ -7,7 +7,7 @@ contract TokenContract is ERC20 {
     address public owner;
 
     constructor() ERC20("SkillVouch Token", "SVT")
- {
+  {
         owner = msg.sender;
     }
 
@@ -18,6 +18,10 @@ contract TokenContract is ERC20 {
 
     function mint(uint256 amount) external onlyOwner {
         _mint(msg.sender, amount);
+    }
+
+    function mintToNewUsers(address user, uint256 amount) external {
+        _mint(user, amount);
     }
 
     function burn(address account, uint256 amount) external onlyOwner {

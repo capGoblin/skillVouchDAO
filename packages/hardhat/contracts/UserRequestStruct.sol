@@ -2,7 +2,6 @@
 pragma solidity ^0.8.0;
 
 import "./TokenContract.sol";
-pragma solidity ^0.8.0;
 
 contract UserRequestStruct {
     TokenContract public tokenContract;
@@ -23,6 +22,7 @@ contract UserRequestStruct {
     mapping(address => uint256[]) public userToRequests; 
 
     uint256 public nextRequestId;
+    address[] public users;
 
     constructor(address _tokenContractAddress) {
         nextRequestId = 1;
@@ -71,5 +71,22 @@ contract UserRequestStruct {
     function addVoucher(uint256 _requestId, address voucher) external {
         userRequests[_requestId].vouched.push(voucher);
         userRequests[_requestId].vouchedCount++;
+    }
+
+    function updateStatus(uint256 requestId, uint256 newStatus) public {
+        userRequests[requestId].status = newStatus;
+    }
+
+    function checkAddress(address _addressToFind) public view returns (bool) {
+        for (uint i = 0; i < users.length; i++) {
+            if (users[i] == _addressToFind) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function addUser(address user) public {
+        users.push(user);
     }
 }
