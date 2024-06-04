@@ -3,7 +3,7 @@ pragma solidity ^0.8.0;
 
 import "./TokenContract.sol";
 
-contract UserRequestStruct {
+contract SkillVouchState {
     TokenContract public tokenContract;
 
     struct UserRequest {

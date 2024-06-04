@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./UserRequestStruct.sol";
+import "./SkillVouchState.sol";
 
 contract SkillVouchContract {
-    UserRequestStruct userRequestStruct;
+    SkillVouchState skillVouchState;
 
     mapping(address => uint256[]) public userToRequests;
 
@@ -41,11 +41,8 @@ contract SkillVouchContract {
     event RequestMovedToClosedPhase(uint256 requestId);
 
     constructor(address _userRequestStructAddress) {
-        userRequestStruct = UserRequestStruct(_userRequestStructAddress);
-        userRequestStruct.tokenContract().mintTo(
-            address(this),
-            TOKENSTOCONTRACT
-        );
+        skillVouchState = SkillVouchState(_userRequestStructAddress);
+        skillVouchState.tokenContract().mintTo(address(this), TOKENSTOCONTRACT);
     }
 
     // USER_REQUEST
@@ -58,7 +55,7 @@ contract SkillVouchContract {
     ) external payable {
         require(_stakeAmount > 20, "Stake amount must be greater than 20");
 
-        uint256 reqId = userRequestStruct.add(
+        uint256 reqId = skillVouchState.add(
             msg.sender,
             new address[](0),
             0,
@@ -68,7 +65,7 @@ contract SkillVouchContract {
             _stakeAmount,
             block.timestamp
         );
-        userRequestStruct.tokenContract().transferFrom(
+        skillVouchState.tokenContract().transferFrom(
             msg.sender,
             address(this),
             _stakeAmount
@@ -86,11 +83,11 @@ contract SkillVouchContract {
 
     function mintTokensToNewUsers() external {
         require(
-            !userRequestStruct.checkAddress(msg.sender),
+            !skillVouchState.checkAddress(msg.sender),
             "Already minted to this user"
         );
-        userRequestStruct.tokenContract().mintTo(msg.sender, TOKENSTOUSERS);
-        userRequestStruct.addUser(msg.sender);
+        skillVouchState.tokenContract().mintTo(msg.sender, TOKENSTOUSERS);
+        skillVouchState.addUser(msg.sender);
     }
 
     function transitionRequestStatus(
@@ -98,15 +95,15 @@ contract SkillVouchContract {
         uint8 _newStatus
     ) internal {
         require(
-            userRequestStruct.isRequestPresent(_requestId),
+            skillVouchState.isRequestPresent(_requestId),
             "Request not found"
         );
         require(
-            userRequestStruct.get(_requestId).status != 2,
+            skillVouchState.get(_requestId).status != 2,
             "Request is closed"
         );
 
-        userRequestStruct.updateStatus(_requestId, _newStatus);
+        skillVouchState.updateStatus(_requestId, _newStatus);
         emit RequestStatusChanged(_requestId, _newStatus);
     }
 
@@ -114,34 +111,34 @@ contract SkillVouchContract {
 
     function vouchForSkill(uint256 _requestId) external {
         require(
-            userRequestStruct.isRequestPresent(_requestId),
+            skillVouchState.isRequestPresent(_requestId),
             "Request not found"
         );
         require(
-            userRequestStruct.get(_requestId).status == 0,
+            skillVouchState.get(_requestId).status == 0,
             "Request is not in Vouching Process"
         );
         require(
             !_hasVouchedOrVoted(
-                userRequestStruct.get(_requestId).vouched,
+                skillVouchState.get(_requestId).vouched,
                 msg.sender
             ),
             "Voucher has already vouched for this request"
         );
 
-        userRequestStruct.tokenContract().transferFrom(
+        skillVouchState.tokenContract().transferFrom(
             msg.sender,
             address(this),
             stakedAmount
         );
 
-        userRequestStruct.addVoucher(_requestId, msg.sender);
+        skillVouchState.addVoucher(_requestId, msg.sender);
         emit SkillVouched(_requestId, msg.sender, stakedAmount);
     }
 
     function moveRequestToCommunityValidation(uint256 _requestId) external {
         require(
-            userRequestStruct.get(_requestId).status == 0,
+            skillVouchState.get(_requestId).status == 0,
             "Request is not in Vouching Process phase"
         );
 
@@ -165,11 +162,11 @@ contract SkillVouchContract {
 
     function castVote(uint256 _requestId, bool _acceptance) external {
         require(
-            userRequestStruct.isRequestPresent(_requestId),
+            skillVouchState.isRequestPresent(_requestId),
             "Request not found"
         );
         require(
-            userRequestStruct.get(_requestId).status == 1,
+            skillVouchState.get(_requestId).status == 1,
             "Request is not in Community Validation phase"
         );
         require(
@@ -189,11 +186,11 @@ contract SkillVouchContract {
 
     function closeRequest(uint256 _requestId) external {
         require(
-            userRequestStruct.isRequestPresent(_requestId),
+            skillVouchState.isRequestPresent(_requestId),
             "Request not found"
         );
         require(
-            userRequestStruct.get(_requestId).status == 1,
+            skillVouchState.get(_requestId).status == 1,
             "Request is not in Community Validation phase"
         );
 
@@ -209,11 +206,11 @@ contract SkillVouchContract {
     }
 
     function distributeRewards(uint256 _requestId) internal {
-        UserRequestStruct.UserRequest memory request = userRequestStruct.get(
+        SkillVouchState.UserRequest memory request = skillVouchState.get(
             _requestId
         );
 
-        userRequestStruct.tokenContract().transferFrom(
+        skillVouchState.tokenContract().transferFrom(
             address(this),
             request.user,
             request.stakeAmountByUser + INCENTIVEAMOUNT
@@ -221,7 +218,7 @@ contract SkillVouchContract {
 
         for (uint256 i = 0; i < request.vouched.length; i++) {
             address vouchor = request.vouched[i];
-            userRequestStruct.tokenContract().transferFrom(
+            skillVouchState.tokenContract().transferFrom(
                 address(this),
                 vouchor,
                 stakedAmount + INCENTIVEAMOUNT
@@ -230,7 +227,7 @@ contract SkillVouchContract {
 
         for (uint256 i = 0; i < voted[_requestId].length; i++) {
             address voter = voted[_requestId][i];
-            userRequestStruct.tokenContract().transferFrom(
+            skillVouchState.tokenContract().transferFrom(
                 address(this),
                 voter,
                 INCENTIVEAMOUNT
@@ -239,17 +236,17 @@ contract SkillVouchContract {
     }
 
     function distributePenalties(uint256 _requestId) internal {
-        UserRequestStruct.UserRequest memory request = userRequestStruct.get(
+        SkillVouchState.UserRequest memory request = skillVouchState.get(
             _requestId
         );
 
-        userRequestStruct.tokenContract().burnFrom(
+        skillVouchState.tokenContract().burnFrom(
             address(this),
             request.stakeAmountByUser
         );
 
         for (uint256 i = 0; i < request.vouched.length; i++) {
-            userRequestStruct.tokenContract().burnFrom(
+            skillVouchState.tokenContract().burnFrom(
                 address(this),
                 stakedAmount
             );
@@ -257,7 +254,7 @@ contract SkillVouchContract {
 
         for (uint256 i = 0; i < voted[_requestId].length; i++) {
             address voter = voted[_requestId][i];
-            userRequestStruct.tokenContract().transferFrom(
+            skillVouchState.tokenContract().transferFrom(
                 address(this),
                 voter,
                 INCENTIVEAMOUNT
@@ -267,7 +264,7 @@ contract SkillVouchContract {
 
     function moveRequestToClosedPhase(uint256 _requestId) internal {
         require(
-            userRequestStruct.get(_requestId).status == 1,
+            skillVouchState.get(_requestId).status == 1,
             "Request is not in Community Validation phase"
         );
 
