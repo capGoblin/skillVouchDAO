@@ -6,5 +6,9 @@
   "private": true,
   "workspaces": [
     "packages/*"
+  ],
+  "nohoist": [
+    "**/hardhat",
+    "**/hardhat/**"
   ]
 }

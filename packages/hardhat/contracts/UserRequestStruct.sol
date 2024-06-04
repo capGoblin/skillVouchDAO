@@ -19,7 +19,7 @@ contract UserRequestStruct {
     }
 
     mapping(uint256 => UserRequest) public userRequests;
-    mapping(address => uint256[]) public userToRequests; 
+    mapping(address => uint256[]) public userToRequests;
 
     uint256 public nextRequestId;
     address[] public users;
@@ -58,7 +58,6 @@ contract UserRequestStruct {
 
         return requestId;
     }
-
 
     function get(uint256 requestId) external view returns (UserRequest memory) {
         return userRequests[requestId];
