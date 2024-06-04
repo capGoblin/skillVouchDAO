@@ -19,7 +19,7 @@ contract TokenContract is ERC20 {
         _mint(msg.sender, amount);
     }
 
-    function mintToNewUsers(address user, uint256 amount) external {
+    function mintTo(address user, uint256 amount) external {
         _mint(user, amount);
     }
 
