@@ -1,5 +1,4 @@
 {
-  "SkillVouch#TokenContract": "0x5cA8800bBF39F388b8Aa0aaf287E6F700d666414",
-  "SkillVouch#UserRequestStruct": "0x9ADab8dF53Ae775c766bbb5748f028E56024bEE3",
-  "SkillVouch#UserRequestContract": "0x4ffFa4B9Ac841BEf20910caE3d2F52A9D85F4314"
+  "SkillVouch#TokenContract": "0x06e6B4b85510a47a617A5b3741cD7e3b5d05c8c4",
+  "SkillVouch#SkillVouchState": "0xe8B56B64b258Ac548c2FfBD8fD7cBbBa7f500436"
 }
