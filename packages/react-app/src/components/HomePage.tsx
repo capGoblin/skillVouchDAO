@@ -83,7 +83,7 @@ export default function Component() {
           signerT
         );
         setContract(contractT);
-        contract.mintTokensToNewUsers();
+        contractT.mintTokensToNewUsers();
       }
     };
 
