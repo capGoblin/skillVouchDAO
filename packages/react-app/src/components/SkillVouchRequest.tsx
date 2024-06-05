@@ -56,6 +56,8 @@ const SkillVouchRequest = () => {
 
     const newStageTwoInputs = [...stageTwoInputs, { ...item, NoOfVouched: 0 }];
     setStageTwoInputs(newStageTwoInputs);
+
+    contract.transitionRequestStatus(index, 0);
   }
 
   return (

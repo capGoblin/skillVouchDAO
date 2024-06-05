@@ -4,9 +4,11 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useStore } from "../store/store";
 
 const CommunityValidation = () => {
-  const { stageThreeInputs, setStageThreeInputs } = useStore();
+  const { stageThreeInputs, setStageThreeInputs, contract } = useStore();
 
-  function voted(arg0: boolean): void {
+  function voted(index: number, arg0: boolean): void {
+    contract.castVote(index, arg0);
+
     throw new Error("Function not implemented.");
   }
 
@@ -52,18 +54,25 @@ const CommunityValidation = () => {
                 <Button
                   variant="green"
                   className="w-1/2"
-                  onClick={() => voted(true)}
+                  onClick={() => voted(index, true)}
                 >
                   Yes
                 </Button>
                 <Button
                   variant="destructive"
                   className="w-1/2"
-                  onClick={() => voted(false)}
+                  onClick={() => voted(index, false)}
                 >
                   No
                 </Button>
               </div>
+              <Button
+                variant="secondary"
+                className="w-max"
+                onClick={() => contract.closeRequest(index)}
+              >
+                Close
+              </Button>
             </Card>
           ))}
         </div>

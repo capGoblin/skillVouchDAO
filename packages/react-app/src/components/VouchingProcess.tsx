@@ -14,6 +14,7 @@ const VouchingProcess = () => {
     setStageTwoInputs,
     stageThreeInputs,
     setStageThreeInputs,
+    contract,
   } = useStore();
 
   function moveToCommunityValidation(index: any) {
@@ -28,6 +29,8 @@ const VouchingProcess = () => {
       { ...item, NoOfYesVotes: 0, NoOfNoVotes: 0 },
     ];
     setStageThreeInputs(newStageThreeInputs);
+
+    contract.moveRequestToCommunityValidation(index);
   }
 
   return (
@@ -71,7 +74,11 @@ const VouchingProcess = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button variant="outline" className="w-full">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => contract.vouchForSkill(index)}
+                >
                   Vouch
                 </Button>
                 <Button
