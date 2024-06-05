@@ -1,54 +1,53 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { SkillVouchDialog } from "./SkillVouchDialog";
 
 const SkillVouchRequest = () => {
+  const [inputs, setInputs] = useState<string[][]>([]);
+
+  const saveChanges = (
+    skills: string,
+    POW: string,
+    selectedPOW: string,
+    linkedin: string,
+    github: string
+  ) => {
+    setInputs((prevInputs) => [
+      ...prevInputs,
+      [skills, POW, selectedPOW, linkedin, github],
+    ]);
+  };
+
   return (
     <div className="flex flex-col">
       <main className="flex-1 overflow-auto p-6 md:p-10">
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center gap-4">
-            <Avatar>
-              <img src="/placeholder.svg" alt="User Avatar" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-            <div className="grid gap-1">
-              <div className="font-semibold">John Doe</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                Software Engineer
+        <div className="flex justify-end">
+          <SkillVouchDialog saveChanges={saveChanges} />{" "}
+        </div>
+        <div className="grid grid-cols-2 gap-40 mr-32">
+          {inputs.map((input, index) => (
+            <div className="grid gap-5" key={index}>
+              <div className="flex mb-4 space-x-11">
+                <div className="font-bold text-lg">Skills</div>
+                <div className="inline-block ml-2 text-lg">{input[0]}</div>
               </div>
+              <div className="flex mb-4 space-x-11">
+                <div className="font-bold text-lg">{input[2]}</div>
+                <div className="inline-block ml-2 text-lg">{input[1]}</div>
+              </div>
+              <div className="flex items-center gap-2 mb-4">
+                <a href={input[3]} target="_blank" rel="noopener noreferrer">
+                  <LinkedinIcon className="h-6 w-6" />
+                </a>
+                <a href={input[4]} target="_blank" rel="noopener noreferrer">
+                  <GithubIcon className="h-6 w-6" />
+                </a>
+              </div>
+              <Button onClick={() => {}} className="mr-20">
+                Move to Skill Vouch Request
+              </Button>
             </div>
-          </div>
-          <div className="grid gap-4">
-            <div>
-              <Label htmlFor="skills">Skills</Label>
-              <Input
-                id="skills"
-                type="text"
-                placeholder="JavaScript, React, Node.js"
-              />
-            </div>
-            <div>
-              <Label htmlFor="experience">Experience</Label>
-              <Input
-                id="experience"
-                type="text"
-                placeholder="Acme Inc. • 2019 - Present"
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <a href="#" target="_blank">
-                <LinkedinIcon className="h-5 w-5" />
-              </a>
-              <a href="#" target="_blank">
-                <GithubIcon className="h-5 w-5" />
-              </a>
-            </div>
-          </div>
-          <Button onClick={() => {}} className="w-full">
-            Move to Skill Vouch Request
-          </Button>
+          ))}
         </div>
       </main>
     </div>
