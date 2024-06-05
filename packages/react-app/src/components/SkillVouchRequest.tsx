@@ -1,7 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { SkillVouchDialog } from "./SkillVouchDialog";
+import { ethers } from "ethers";
+import { Button } from "@/components/ui/button";
 import { useStore } from "../store/store";
+import { SkillVouchDialog } from "./SkillVouchDialog";
 
 const SkillVouchRequest = () => {
   const {
@@ -9,6 +10,7 @@ const SkillVouchRequest = () => {
     setStageOneInputs,
     stageTwoInputs,
     setStageTwoInputs,
+    contract,
   } = useStore();
 
   const saveChanges = (
@@ -28,6 +30,21 @@ const SkillVouchRequest = () => {
         github: github,
       },
     ]);
+
+    const stakeAmount = prompt(
+      "Please enter the stake amount more than 20 SVT"
+    ); // Get stake amount from user
+
+    if (!stakeAmount) {
+      alert("Stake amount is required");
+      return;
+    }
+
+    const stakeAmountWei = ethers.parseEther(stakeAmount); // Convert to Wei
+
+    if (selectedPOW == "Experience")
+      contract.createRequest(skills, "", POW, stakeAmountWei);
+    else contract.createRequest(skills, POW, "", stakeAmountWei);
   };
 
   function moveToVouchingProcess(index: number) {

@@ -34,6 +34,12 @@ interface State {
   setStageTwoInputs: (inputs: VouchingProcess[]) => void;
   stageThreeInputs: CommunityValidation[];
   setStageThreeInputs: (inputs: CommunityValidation[]) => void;
+  contract: any;
+  setContract: (contract: any) => void;
+  provider: any;
+  setProvider: (provider: any) => void;
+  signer: any;
+  setSigner: (signer: any) => void;
 }
 
 export const useStore = create<State>((set) => ({
@@ -45,4 +51,10 @@ export const useStore = create<State>((set) => ({
   setStageTwoInputs: (inputs) => set({ stageTwoInputs: inputs }),
   stageThreeInputs: [],
   setStageThreeInputs: (inputs) => set({ stageThreeInputs: inputs }),
+  contract: null,
+  setContract: (contract) => set({ contract }),
+  provider: null,
+  setProvider: (provider) => set({ provider }),
+  signer: null,
+  setSigner: (signer) => set({ signer }),
 }));

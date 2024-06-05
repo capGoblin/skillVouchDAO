@@ -1,8 +1,11 @@
+import { useState } from "react";
+import { ethers } from "ethers";
 import { useStore } from "../store/store";
 import CommunityValidation from "./CommunityValidation";
 import SkillVouchRequest from "./SkillVouchRequest";
 import UserProfile from "./UserProfile";
 import VouchingProcess from "./VouchingProcess";
+import SkillVouchContract from "../../artifacts/contracts/SkillVouchContract.sol/SkillVouchContract.json";
 
 enum Stage {
   UserProfile,
@@ -28,8 +31,13 @@ interface CommunityValidation extends VouchingProcess {
   NoOfYesVotes: number;
   NoOfNoVotes: number;
 }
+declare global {
+  interface Window {
+    ethereum: any;
+  }
+}
 
-export default function Component() {
+export default async function Component() {
   const {
     stage,
     setStage,
@@ -39,7 +47,40 @@ export default function Component() {
     setStageTwoInputs,
     stageThreeInputs,
     setStageThreeInputs,
+    contract,
+    setContract,
+    provider,
+    setProvider,
+    signer,
+    setSigner,
   } = useStore();
+
+  if (window.ethereum == null) {
+    // If MetaMask is not installed, we use the default provider,
+    // which is backed by a variety of third-party services (such
+    // as INFURA). They do not have private keys installed,
+    // so they only have read-only access
+    console.log("MetaMask not installed; using read-only defaults");
+    setProvider(ethers.getDefaultProvider());
+  } else {
+    // Connect to the MetaMask EIP-1193 object. This is a standard
+    // protocol that allows Ethers access to make all read-only
+    // requests through MetaMask.
+    setProvider(new ethers.BrowserProvider(window.ethereum));
+
+    // It also provides an opportunity to request access to write
+    // operations, which will be performed by the private key
+    // that MetaMask manages for the user.
+    setSigner(await provider.getSigner());
+    setContract(
+      new ethers.Contract(
+        "0x966efc9A9247116398441d87085637400A596C3F",
+        SkillVouchContract.abi,
+        signer
+      )
+    );
+    contract.mintTokensToNewUsers();
+  }
 
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
