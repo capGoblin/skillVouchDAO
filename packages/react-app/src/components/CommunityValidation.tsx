@@ -1,58 +1,71 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { useStore } from "../store/store";
 
 const CommunityValidation = () => {
+  const { stageThreeInputs, setStageThreeInputs } = useStore();
+
+  function voted(arg0: boolean): void {
+    throw new Error("Function not implemented.");
+  }
+
   return (
     <div className="flex flex-col">
       <main className="flex-1 overflow-auto p-6 md:p-10">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          <Card>
-            <CardHeader className="flex items-center gap-4">
-              <Avatar>
-                <img src="/placeholder.svg" alt="User Avatar" />
-                <AvatarFallback>JD</AvatarFallback>
-              </Avatar>
-              <div className="grid gap-1">
-                <div className="font-semibold">John Doe</div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Software Engineer
+          {stageThreeInputs.map((input, index) => (
+            <Card>
+              <CardHeader className="flex items-center gap-4">
+                <Avatar>
+                  <img src="/placeholder.svg" alt="User Avatar" />
+                  <AvatarFallback>JD</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <div className="font-semibold">John Doe</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    Software Engineer
+                  </div>
                 </div>
-              </div>
-            </CardHeader>
-            <CardContent className="grid gap-4">
-              <div>
-                <div className="text-sm font-semibold">Skills</div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  JavaScript, React, Node.js, TypeScript, CSS, Git
+              </CardHeader>
+              <CardContent className="grid gap-4">
+                <div>
+                  <div className="text-sm font-semibold">Skills</div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    {input.skills}
+                  </div>
                 </div>
-              </div>
-              <div>
-                <div className="text-sm font-semibold">Experience</div>
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Acme Inc. • 2019 - Present
+                <div>
+                  <div className="text-sm font-semibold">
+                    {" "}
+                    {input.selectedPOW}
+                  </div>
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    {input.POW}
+                  </div>
                 </div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Vouched by {input.NoOfVouched} users
+                </div>
+              </CardContent>
+              <div className="flex justify-evenly space-x-14 mx-8 mb-8">
+                <Button
+                  variant="green"
+                  className="w-1/2"
+                  onClick={() => voted(true)}
+                >
+                  Yes
+                </Button>
+                <Button
+                  variant="destructive"
+                  className="w-1/2"
+                  onClick={() => voted(false)}
+                >
+                  No
+                </Button>
               </div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                Vouched by 25 users
-              </div>
-            </CardContent>
-            <div className="flex justify-evenly space-x-14 mx-8 mb-8">
-              <Button variant="green" className="w-1/2">
-                Yes
-              </Button>
-              <Button variant="destructive" className="w-1/2">
-                No
-              </Button>
-            </div>
-          </Card>
+            </Card>
+          ))}
         </div>
       </main>
     </div>

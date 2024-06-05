@@ -4,6 +4,7 @@ import CommunityValidation from "./CommunityValidation";
 import SkillVouchRequest from "./SkillVouchRequest";
 import VouchingProcess from "./VouchingProcess";
 import UserProfile from "./UserProfile";
+import { useStore } from "../store/store";
 
 enum Stage {
   UserProfile,
@@ -11,9 +12,37 @@ enum Stage {
   VouchingProcess,
   CommunityValidation,
 }
+interface BaseProfile {
+  skills: string;
+  POW: string;
+  selectedPOW: string;
+  linkedin: string;
+  github: string;
+}
+
+interface SkillVouchRequest extends BaseProfile {}
+
+interface VouchingProcess extends BaseProfile {
+  NoOfVouched: number;
+}
+
+interface CommunityValidation extends VouchingProcess {
+  NoOfYesVotes: number;
+  NoOfNoVotes: number;
+}
 
 export default function Component() {
-  const [stage, setStage] = useState<Stage>();
+  const {
+    stage,
+    setStage,
+    stageOneInputs,
+    setStageOneInputs,
+    stageTwoInputs,
+    setStageTwoInputs,
+    stageThreeInputs,
+    setStageThreeInputs,
+  } = useStore();
+
   return (
     <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
       <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">

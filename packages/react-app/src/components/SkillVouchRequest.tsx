@@ -1,9 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { SkillVouchDialog } from "./SkillVouchDialog";
+import { useStore } from "../store/store";
 
 const SkillVouchRequest = () => {
-  const [inputs, setInputs] = useState<string[][]>([]);
+  const {
+    stageOneInputs,
+    setStageOneInputs,
+    stageTwoInputs,
+    setStageTwoInputs,
+  } = useStore();
 
   const saveChanges = (
     skills: string,
@@ -11,12 +17,29 @@ const SkillVouchRequest = () => {
     selectedPOW: string,
     linkedin: string,
     github: string
-  ) => {
-    setInputs((prevInputs) => [
-      ...prevInputs,
-      [skills, POW, selectedPOW, linkedin, github],
+  ): void => {
+    setStageOneInputs([
+      ...stageOneInputs,
+      {
+        skills: skills,
+        POW: POW,
+        selectedPOW: selectedPOW,
+        linkedin: linkedin,
+        github: github,
+      },
     ]);
   };
+
+  function moveToVouchingProcess(index: number) {
+    const item = stageOneInputs[index];
+
+    const newStageOneInputs = [...stageOneInputs];
+    newStageOneInputs.splice(index, 1);
+    setStageOneInputs(newStageOneInputs);
+
+    const newStageTwoInputs = [...stageTwoInputs, { ...item, NoOfVouched: 0 }];
+    setStageTwoInputs(newStageTwoInputs);
+  }
 
   return (
     <div className="flex flex-col">
@@ -25,25 +48,38 @@ const SkillVouchRequest = () => {
           <SkillVouchDialog saveChanges={saveChanges} />{" "}
         </div>
         <div className="grid grid-cols-2 gap-40 mr-32">
-          {inputs.map((input, index) => (
+          {stageOneInputs.map((input, index) => (
             <div className="grid gap-5" key={index}>
               <div className="flex mb-4 space-x-11">
                 <div className="font-bold text-lg">Skills</div>
-                <div className="inline-block ml-2 text-lg">{input[0]}</div>
+                <div className="inline-block ml-2 text-lg">{input.skills}</div>
               </div>
               <div className="flex mb-4 space-x-11">
-                <div className="font-bold text-lg">{input[2]}</div>
-                <div className="inline-block ml-2 text-lg">{input[1]}</div>
+                <div className="font-bold text-lg">{input.selectedPOW}</div>
+                <div className="inline-block ml-2 text-lg">{input.POW}</div>
               </div>
               <div className="flex items-center gap-2 mb-4">
-                <a href={input[3]} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={input.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <LinkedinIcon className="h-6 w-6" />
                 </a>
-                <a href={input[4]} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={input.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <GithubIcon className="h-6 w-6" />
                 </a>
               </div>
-              <Button onClick={() => {}} className="mr-20">
+              <Button
+                onClick={() => {
+                  moveToVouchingProcess(index);
+                }}
+                className="mr-20"
+              >
                 Move to Vouching Stage
               </Button>
             </div>
