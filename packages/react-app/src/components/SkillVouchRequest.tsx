@@ -44,7 +44,7 @@ const SkillVouchRequest = () => {
                 </a>
               </div>
               <Button onClick={() => {}} className="mr-20">
-                Move to Skill Vouch Request
+                Move to Vouching Stage
               </Button>
             </div>
           ))}

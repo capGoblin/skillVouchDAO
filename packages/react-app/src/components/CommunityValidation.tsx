@@ -1,6 +1,11 @@
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
@@ -8,159 +13,45 @@ const CommunityValidation = () => {
   return (
     <div className="flex flex-col">
       <main className="flex-1 overflow-auto p-6 md:p-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-4">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           <Card>
-            <CardContent className="flex flex-col gap-4">
-              <div className="flex items-center gap-4">
-                <Avatar>
-                  <img src="/placeholder.svg" alt="User Avatar" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <div className="font-semibold">John Doe</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Software Engineer
-                  </div>
+            <CardHeader className="flex items-center gap-4">
+              <Avatar>
+                <img src="/placeholder.svg" alt="User Avatar" />
+                <AvatarFallback>JD</AvatarFallback>
+              </Avatar>
+              <div className="grid gap-1">
+                <div className="font-semibold">John Doe</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Software Engineer
                 </div>
               </div>
-              <div className="grid gap-2">
-                <div>
-                  <Label htmlFor="skills">Skills</Label>
-                  <Input
-                    id="skills"
-                    type="text"
-                    placeholder="JavaScript, React, Node.js"
-                  />
+            </CardHeader>
+            <CardContent className="grid gap-4">
+              <div>
+                <div className="text-sm font-semibold">Skills</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  JavaScript, React, Node.js, TypeScript, CSS, Git
                 </div>
-                <div>
-                  <Label htmlFor="experience">Experience</Label>
-                  <Input
-                    id="experience"
-                    type="text"
-                    placeholder="Acme Inc. • 2019 - Present"
-                  />
+              </div>
+              <div>
+                <div className="text-sm font-semibold">Experience</div>
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Acme Inc. • 2019 - Present
                 </div>
-                <div className="flex items-center gap-2">
-                  <a href="#" target="_blank">
-                    <LinkedinIcon className="h-5 w-5" />
-                  </a>
-                  <a href="#" target="_blank">
-                    <GithubIcon className="h-5 w-5" />
-                  </a>
-                </div>
-                <div className="flex justify-between">
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Vouched by 25 users
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="green">Yes</Button>
-                    <Button variant="destructive">No</Button>
-                  </div>
-                </div>
+              </div>
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                Vouched by 25 users
               </div>
             </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex flex-col gap-4">
-              <div className="flex items-center gap-4">
-                <Avatar>
-                  <img src="/placeholder.svg" alt="User Avatar" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <div className="font-semibold">Jane Doe</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Frontend Developer
-                  </div>
-                </div>
-              </div>
-              <div className="grid gap-2">
-                <div>
-                  <Label htmlFor="skills">Skills</Label>
-                  <Input
-                    id="skills"
-                    type="text"
-                    placeholder="HTML, CSS, JavaScript"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="experience">Experience</Label>
-                  <Input
-                    id="experience"
-                    type="text"
-                    placeholder="Acme Inc. • 2017 - Present"
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <a href="#" target="_blank">
-                    <LinkedinIcon className="h-5 w-5" />
-                  </a>
-                  <a href="#" target="_blank">
-                    <GithubIcon className="h-5 w-5" />
-                  </a>
-                </div>
-                <div className="flex justify-between">
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Vouched by 18 users
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="green">Yes</Button>
-                    <Button variant="destructive">No</Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="flex flex-col gap-4">
-              <div className="flex items-center gap-4">
-                <Avatar>
-                  <img src="/placeholder.svg" alt="User Avatar" />
-                  <AvatarFallback>JD</AvatarFallback>
-                </Avatar>
-                <div className="grid gap-1">
-                  <div className="font-semibold">Bob Smith</div>
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Backend Developer
-                  </div>
-                </div>
-              </div>
-              <div className="grid gap-2">
-                <div>
-                  <Label htmlFor="skills">Skills</Label>
-                  <Input
-                    id="skills"
-                    type="text"
-                    placeholder="Node.js, Express, MongoDB"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="experience">Experience</Label>
-                  <Input
-                    id="experience"
-                    type="text"
-                    placeholder="Acme Inc. • 2015 - Present"
-                  />
-                </div>
-                <div className="flex items-center gap-2">
-                  <a href="#" target="_blank">
-                    <LinkedinIcon className="h-5 w-5" />
-                  </a>
-                  <a href="#" target="_blank">
-                    <GithubIcon className="h-5 w-5" />
-                  </a>
-                </div>
-                <div className="flex justify-between">
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Vouched by 32 users
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="green">Yes</Button>
-                    <Button variant="destructive">No</Button>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
+            <div className="flex justify-evenly space-x-14 mx-8 mb-8">
+              <Button variant="green" className="w-1/2">
+                Yes
+              </Button>
+              <Button variant="destructive" className="w-1/2">
+                No
+              </Button>
+            </div>
           </Card>
         </div>
       </main>
