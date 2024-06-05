@@ -53,8 +53,8 @@ const CommunityValidation = () => {
                     Vouched by 25 users
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="link">Yes</Button>
-                    <Button variant="link">No</Button>
+                    <Button variant="green">Yes</Button>
+                    <Button variant="destructive">No</Button>
                   </div>
                 </div>
               </div>
@@ -104,8 +104,8 @@ const CommunityValidation = () => {
                     Vouched by 18 users
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="link">Yes</Button>
-                    <Button variant="link">No</Button>
+                    <Button variant="green">Yes</Button>
+                    <Button variant="destructive">No</Button>
                   </div>
                 </div>
               </div>
@@ -155,8 +155,8 @@ const CommunityValidation = () => {
                     Vouched by 32 users
                   </div>
                   <div className="flex gap-2">
-                    <Button variant="link">Yes</Button>
-                    <Button variant="link">No</Button>
+                    <Button variant="green">Yes</Button>
+                    <Button variant="destructive">No</Button>
                   </div>
                 </div>
               </div>
