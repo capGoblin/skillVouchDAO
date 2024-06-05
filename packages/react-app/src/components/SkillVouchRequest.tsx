@@ -31,20 +31,24 @@ const SkillVouchRequest = () => {
       },
     ]);
 
-    const stakeAmount = prompt(
-      "Please enter the stake amount more than 20 SVT"
-    ); // Get stake amount from user
+    const stakeAmount = 20; // Set the stake amount
 
-    if (!stakeAmount) {
-      alert("Stake amount is required");
-      return;
-    }
+    const stakeAmountWei = ethers.parseEther(`${stakeAmount}`); // Convert to Wei
 
-    const stakeAmountWei = ethers.parseEther(stakeAmount); // Convert to Wei
+    if (selectedPOW == "Experience") {
+      contract.createRequest(skills, "", POW, stakeAmountWei, {
+        value: stakeAmountWei,
+      });
+    } // Convert to Wei
 
     if (selectedPOW == "Experience")
-      contract.createRequest(skills, "", POW, stakeAmountWei);
-    else contract.createRequest(skills, POW, "", stakeAmountWei);
+      contract.createRequest(skills, "", POW, stakeAmountWei, {
+        value: stakeAmountWei,
+      });
+    else
+      contract.createRequest(skills, POW, "", stakeAmountWei, {
+        value: stakeAmountWei,
+      });
   };
 
   function moveToVouchingProcess(index: number) {
