@@ -4,28 +4,29 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract TokenContract is ERC20 {
-    address public owner;
+    // address public owner;
 
     constructor() ERC20("SkillVouch Token", "SVT") {
-        owner = msg.sender;
+        // owner = msg.sender;
     }
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Only the owner can call this function");
-        _;
-    }
+    // modifier onlyOwner() {
+    //     require(msg.sender == owner, "Only the owner can call this function");
+    //     _;
+    // }
 
-    function mint(uint256 amount) external onlyOwner {
-        _mint(msg.sender, amount);
-    }
+    // function mint(uint256 amount) external onlyOwner {
+    //     _mint(msg.sender, amount);
+    // }
 
     function mintTo(address user, uint256 amount) external {
+        require(user != address(0), "ERC20: mint to the zero address");
         _mint(user, amount);
     }
 
-    function burn(address account, uint256 amount) external onlyOwner {
-        _burn(account, amount);
-    }
+    // function burn(address account, uint256 amount) external onlyOwner {
+    //     _burn(account, amount);
+    // }
 
     function burnFrom(address account, uint256 amount) public {
         uint256 currentAllowance = allowance(account, msg.sender);
@@ -37,13 +38,13 @@ contract TokenContract is ERC20 {
         _burn(account, amount);
     }
 
-    function transfer(
-        address recipient,
-        uint256 amount
-    ) public override returns (bool) {
-        require(recipient != address(0), "Transfer to zero address");
-        return super.transfer(recipient, amount);
-    }
+    // function transfer(
+    //     address recipient,
+    //     uint256 amount
+    // ) public override returns (bool) {
+    //     require(recipient != address(0), "Transfer to zero address");
+    //     return super.transfer(recipient, amount);
+    // }
 
     function transferFrom(
         address sender,

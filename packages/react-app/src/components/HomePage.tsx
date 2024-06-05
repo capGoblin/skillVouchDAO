@@ -1,10 +1,8 @@
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useStore } from "../store/store";
 import CommunityValidation from "./CommunityValidation";
 import SkillVouchRequest from "./SkillVouchRequest";
-import VouchingProcess from "./VouchingProcess";
 import UserProfile from "./UserProfile";
-import { useStore } from "../store/store";
+import VouchingProcess from "./VouchingProcess";
 
 enum Stage {
   UserProfile,

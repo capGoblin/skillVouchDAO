@@ -4,16 +4,12 @@ pragma solidity ^0.8.0;
 import "./SkillVouchState.sol";
 
 contract SkillVouchContract {
-    SkillVouchState skillVouchState;
-
-    mapping(address => uint256[]) public userToRequests;
+    SkillVouchState public immutable skillVouchState;
 
     uint256 constant TOKENSTOUSERS = 50;
     uint256 constant TOKENSTOCONTRACT = 1000;
     uint256 constant INCENTIVEAMOUNT = 10;
-
-    uint256 constant stakedAmount = 20;
-    uint256 public vouchingTimeLimit;
+    uint256 constant STAKEDAMOUNT = 20;
 
     mapping(uint256 => address[]) public voted;
     mapping(uint256 => uint256) public acceptVotes;
@@ -28,17 +24,13 @@ contract SkillVouchContract {
         uint256 stakeAmount
     );
     event RequestStatusChanged(uint256 requestId, uint8 _newStatus);
-
     event SkillVouched(
         uint256 requestId,
         address vouchor,
         uint256 stakedAmount
     );
-    event RequestMovedToCommunityValidation(uint256 requestId);
-
     event VoteCasted(uint256 requestId, address voter, bool acceptance);
     event RequestClosed(uint256 requestId, bool accepted);
-    event RequestMovedToClosedPhase(uint256 requestId);
 
     constructor(address _userRequestStructAddress) {
         skillVouchState = SkillVouchState(_userRequestStructAddress);
@@ -58,12 +50,10 @@ contract SkillVouchContract {
         uint256 reqId = skillVouchState.add(
             msg.sender,
             new address[](0),
-            0,
             _skill,
             _project,
             _experience,
-            _stakeAmount,
-            block.timestamp
+            _stakeAmount
         );
         skillVouchState.tokenContract().transferFrom(
             msg.sender,
@@ -129,11 +119,11 @@ contract SkillVouchContract {
         skillVouchState.tokenContract().transferFrom(
             msg.sender,
             address(this),
-            stakedAmount
+            STAKEDAMOUNT
         );
 
         skillVouchState.addVoucher(_requestId, msg.sender);
-        emit SkillVouched(_requestId, msg.sender, stakedAmount);
+        emit SkillVouched(_requestId, msg.sender, STAKEDAMOUNT);
     }
 
     function moveRequestToCommunityValidation(uint256 _requestId) external {
@@ -143,7 +133,6 @@ contract SkillVouchContract {
         );
 
         transitionRequestStatus(_requestId, 1);
-        emit RequestMovedToCommunityValidation(_requestId);
     }
 
     function _hasVouchedOrVoted(
@@ -221,7 +210,7 @@ contract SkillVouchContract {
             skillVouchState.tokenContract().transferFrom(
                 address(this),
                 vouchor,
-                stakedAmount + INCENTIVEAMOUNT
+                STAKEDAMOUNT + INCENTIVEAMOUNT
             );
         }
 
@@ -248,7 +237,7 @@ contract SkillVouchContract {
         for (uint256 i = 0; i < request.vouched.length; i++) {
             skillVouchState.tokenContract().burnFrom(
                 address(this),
-                stakedAmount
+                STAKEDAMOUNT
             );
         }
 
@@ -269,6 +258,5 @@ contract SkillVouchContract {
         );
 
         transitionRequestStatus(_requestId, 2);
-        emit RequestMovedToClosedPhase(_requestId);
     }
 }
