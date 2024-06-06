@@ -21,49 +21,15 @@ const SkillVouchRequest = () => {
   } = useStore();
   const queryData = async () => {
     const address = await signer.getAddress();
-    // const client = new ApolloClient({
-    //   uri: APIURL,
-    //   cache: new InMemoryCache(),
-    // });
+
     const client = new Client({
       url: APIURL,
       exchanges: [cacheExchange, fetchExchange],
     });
 
-    //     const query = `
-    //     query GetRequestsByUser($userAddress: String!) {
-    //       requestCreateds(where: { user: $userAddress }) {
-    //         id
-    //         requestId
-    //         user
-    //         skill
-    //         experience
-    //         project
-    //         stakeAmount
-    //       }
-    //     }
-    // `;
-
-    // const variables = {
-    //   userAddress: `${address}`,
-    // };
-
     const data = await client
       .query(GET_REQ_BY_USER, { userAddress: `${address}` })
       .toPromise();
-
-    // const { data } = await client.query(GET_REQ_BY_USER, variables).toPromise();
-
-    // const { data } = await client
-    //   .query(query, Variable, {
-    //     userAddress: `${address}`,
-    //   })
-    //   .toPromise();
-
-    console.log(address);
-    console.log(client);
-
-    console.log(data);
 
     return data.data;
   };
