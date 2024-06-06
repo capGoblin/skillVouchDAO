@@ -21,7 +21,9 @@ contract SkillVouchContract {
         string skill,
         string project,
         string experience,
-        uint256 stakeAmount
+        uint256 stakeAmount,
+        string linkedInLink,
+        string gitHubLink
     );
     event RequestStatusChanged(uint256 requestId, uint8 _newStatus);
     event SkillVouched(
@@ -43,12 +45,11 @@ contract SkillVouchContract {
         string memory _skill,
         string memory _project,
         string memory _experience,
-        uint256 _stakeAmount
+        uint256 _stakeAmount,
+        string memory _linkedInLink,
+        string memory _gitHubLink
     ) external payable {
-        require(
-            _stakeAmount > 20 * DECIMAL,
-            "Stake amount must be greater than 20"
-        );
+        require(_stakeAmount > 20, "Stake amount must be greater than 20");
 
         uint256 reqId = skillVouchState.add(
             msg.sender,
@@ -56,7 +57,9 @@ contract SkillVouchContract {
             _skill,
             _project,
             _experience,
-            _stakeAmount
+            _stakeAmount,
+            _linkedInLink,
+            _gitHubLink
         );
         skillVouchState.tokenContract().transferFrom(
             msg.sender,
@@ -70,7 +73,9 @@ contract SkillVouchContract {
             _skill,
             _project,
             _experience,
-            _stakeAmount
+            _stakeAmount,
+            _linkedInLink,
+            _gitHubLink
         );
     }
 

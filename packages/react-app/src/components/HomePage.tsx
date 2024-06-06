@@ -72,9 +72,11 @@ export default function Component() {
         // It also provides an opportunity to request access to write
         // operations, which will be performed by the private key
         // that MetaMask manages for the user.
+
+        // "0x966efc9A9247116398441d87085637400A596C3F",
         const signerT = await providerT.getSigner();
         const contractT = new ethers.Contract(
-          "0x966efc9A9247116398441d87085637400A596C3F",
+          "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
           SkillVouchContract.abi,
           signerT
         );

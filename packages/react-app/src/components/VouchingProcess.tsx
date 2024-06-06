@@ -13,11 +13,13 @@ import {
   GET_VOUCHED,
   GET_VOTES,
 } from "../../constants/subgraphQueries";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 const VouchingProcess = () => {
   const APIURL =
     "https://api.studio.thegraph.com/query/77624/skillvouchdao/version/latest";
+  const [fetch, setFetch] = useState(false);
+
   const {
     stageTwoInputs,
     setStageTwoInputs,
@@ -209,7 +211,10 @@ const VouchingProcess = () => {
                   <Button
                     variant="outline"
                     className="w-full"
-                    onClick={() => contract.vouchForSkill(input.requestId)}
+                    onClick={() => {
+                      contract.vouchForSkill(input.requestId);
+                      setFetch(true);
+                    }}
                   >
                     Vouch
                   </Button>

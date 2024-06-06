@@ -14,6 +14,8 @@ contract SkillVouchState {
         string experience;
         uint256 stakeAmountByUser;
         uint256 status;
+        string linkedInLink;
+        string gitHubLink;
         // uint256 creationTime;
     }
 
@@ -36,7 +38,9 @@ contract SkillVouchState {
         string memory _skill,
         string memory _project,
         string memory _experience,
-        uint256 _stakeAmountByUser
+        uint256 _stakeAmountByUser,
+        string memory _linkedInLink,
+        string memory _gitHubLink
     )
         external
         returns (
@@ -52,7 +56,9 @@ contract SkillVouchState {
             project: _project,
             experience: _experience,
             stakeAmountByUser: _stakeAmountByUser,
-            status: 0
+            status: 0,
+            linkedInLink: _linkedInLink,
+            gitHubLink: _gitHubLink
             // creationTime: _creationTime
         });
         userRequests[requestId] = newUserRequest;

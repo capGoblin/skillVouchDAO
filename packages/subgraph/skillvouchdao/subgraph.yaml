@@ -1,0 +1,38 @@
+specVersion: 1.0.0
+indexerHints:
+  prune: auto
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: SkillVouchContract
+    network: sepolia
+    source:
+      address: "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4"
+      abi: SkillVouchContract
+      startBlock: 6052335
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - RequestClosed
+        - RequestCreated
+        - RequestStatusChanged
+        - SkillVouched
+        - VoteCasted
+      abis:
+        - name: SkillVouchContract
+          file: ./abis/SkillVouchContract.json
+      eventHandlers:
+        - event: RequestClosed(uint256,bool)
+          handler: handleRequestClosed
+        - event: RequestCreated(uint256,address,string,string,string,uint256,string,string)
+          handler: handleRequestCreated
+        - event: RequestStatusChanged(uint256,uint8)
+          handler: handleRequestStatusChanged
+        - event: SkillVouched(uint256,address,uint256)
+          handler: handleSkillVouched
+        - event: VoteCasted(uint256,address,bool)
+          handler: handleVoteCasted
+      file: ./src/skill-vouch-contract.ts

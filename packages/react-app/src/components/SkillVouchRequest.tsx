@@ -156,14 +156,14 @@ const SkillVouchRequest = () => {
     linkedin: string,
     github: string
   ): Promise<void> => {
-    const stakeAmount = 21; // Set the stake amount
-    // const stakeAmountWei = ethers.parseUnits(stakeAmount, 18);
+    const stakeAmount = "21"; // Set the stake amount
+    // const stakeAmountEth = ethers.parseUnits(stakeAmount, 18);
 
     // const stakeAmountWei = ethers.parseEther(stakeAmount); // Convert to Wei
 
     if (selectedPOW == "Experience")
-      await contract.createRequest(skills, "", POW, stakeAmount);
-    else await contract.createRequest(skills, POW, "", stakeAmount);
+      await contract.createRequest(skills, "", POW, Number(stakeAmount));
+    else await contract.createRequest(skills, POW, "", Number(stakeAmount));
 
     // setStageOneInputs([
     //   ...stageOneInputs,
