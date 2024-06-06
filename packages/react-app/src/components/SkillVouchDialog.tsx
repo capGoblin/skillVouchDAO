@@ -20,6 +20,7 @@ interface SkillVouchDialogProps {
     skills: string,
     POW: string,
     selectedPOW: string,
+    stakeAmount: string,
     linkedin: string,
     github: string
   ) => void;
@@ -29,13 +30,14 @@ export function SkillVouchDialog({ saveChanges }: SkillVouchDialogProps) {
   const [selectedOption, setSelectedOption] = useState<string>("Experience");
   const [skills, setSkills] = useState("");
   const [POW, setPOW] = useState("");
+  const [stakeAmount, setStakeAmount] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [github, setGithub] = useState("");
   const [open, setOpen] = useState(false);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    saveChanges(skills, POW, selectedOption, linkedin, github);
+    saveChanges(skills, POW, selectedOption, stakeAmount, linkedin, github);
     setOpen(false);
   };
 
@@ -89,6 +91,18 @@ export function SkillVouchDialog({ saveChanges }: SkillVouchDialogProps) {
               }
               value={POW}
               onChange={(e) => setPOW(e.target.value)}
+            />
+          </div>
+          <div className="grid items-center grid-cols-4 gap-4">
+            <Label htmlFor="github" className="text-right">
+              Stake Amount
+            </Label>
+            <Input
+              id="stake"
+              placeholder="Stake Amount of SVT (Min: 20)"
+              className="ml-5 w-60 max-w-lg"
+              value={stakeAmount}
+              onChange={(e) => setStakeAmount(e.target.value)}
             />
           </div>
           <div className="grid items-center grid-cols-4 gap-4">

@@ -13,7 +13,7 @@ import { Client, cacheExchange, fetchExchange } from "@urql/core";
 
 const SkillVouchRequest = () => {
   const APIURL =
-    "https://api.studio.thegraph.com/query/77624/skillvouchdao/version/latest";
+    "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.3";
   const [fetch, setFetch] = useState(false);
   const {
     stageOneInputs,
@@ -155,17 +155,33 @@ const SkillVouchRequest = () => {
     skills: string,
     POW: string,
     selectedPOW: string,
+    stakeAmount: string,
     linkedin: string,
     github: string
   ): Promise<void> => {
-    const stakeAmount = "21"; // Set the stake amount
-    // const stakeAmountEth = ethers.parseUnits(stakeAmount, 18);
+    // const stakeAmount = "21"; // Set the stake amount
+    const stakeAmountEth = ethers.parseUnits(stakeAmount, 18);
 
     // const stakeAmountWei = ethers.parseEther(stakeAmount); // Convert to Wei
 
     if (selectedPOW == "Experience")
-      await contract.createRequest(skills, "", POW, Number(stakeAmount));
-    else await contract.createRequest(skills, POW, "", Number(stakeAmount));
+      await contract.createRequest(
+        skills,
+        "",
+        POW,
+        Number(stakeAmount),
+        linkedin,
+        github
+      );
+    else
+      await contract.createRequest(
+        skills,
+        POW,
+        "",
+        Number(stakeAmount),
+        linkedin,
+        github
+      );
 
     // setStageOneInputs([
     //   ...stageOneInputs,

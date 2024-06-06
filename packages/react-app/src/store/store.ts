@@ -48,7 +48,7 @@ interface State {
 }
 
 export const useStore = create<State>((set) => ({
-  stage: Stage.UserProfile,
+  stage: undefined,
   setStage: (stage) => set({ stage }),
   stageOneInputs: [],
   setStageOneInputs: (inputs) => set({ stageOneInputs: inputs }),

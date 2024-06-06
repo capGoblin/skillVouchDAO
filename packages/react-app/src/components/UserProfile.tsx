@@ -5,7 +5,12 @@ import { GET_REQ_BY_USER, GET_ACCEPTED } from "../../constants/subgraphQueries";
 import { useEffect, useRef, useState } from "react";
 import { useStore } from "../store/store";
 import { Input } from "./ui/input";
-
+enum Stage {
+  UserProfile,
+  SkillVouchRequest,
+  VouchingProcess,
+  CommunityValidation,
+}
 interface RequestCreated {
   id: string;
   requestId: string;
@@ -30,8 +35,9 @@ const UserProfile = () => {
   const [showTitleInput, setShowTitleInput] = useState(false);
 
   const APIURL =
-    "https://api.studio.thegraph.com/query/77624/skillvouchdao/version/latest";
+    "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.3";
   const {
+    setStage,
     stageThreeInputs,
     setStageThreeInputs,
     contract,
@@ -213,7 +219,7 @@ const UserProfile = () => {
                   </div>
                 ) : (
                   <a
-                    href="#"
+                    href={linkedInLink}
                     target="_blank"
                     className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                     onClick={() => setShowLinkedinInput(true)}
@@ -241,7 +247,7 @@ const UserProfile = () => {
                   </div>
                 ) : (
                   <a
-                    href="#"
+                    href={githubLink}
                     target="_blank"
                     className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                     onClick={() => setShowGithubInput(true)}
@@ -260,7 +266,11 @@ const UserProfile = () => {
             <div className="grid gap-2">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Skills</h2>
-                <Button variant="ghost" size="icon">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setStage(Stage.SkillVouchRequest)}
+                >
                   <PlusIcon className="h-4 w-4" />
                   <span className="sr-only">Add Skill</span>
                 </Button>
@@ -281,7 +291,11 @@ const UserProfile = () => {
             <div className="grid gap-2">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Experience</h2>
-                <Button variant="ghost" size="icon">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setStage(Stage.SkillVouchRequest)}
+                >
                   <PlusIcon className="h-4 w-4" />
                   <span className="sr-only">Add Experience</span>
                 </Button>
@@ -310,7 +324,11 @@ const UserProfile = () => {
             <div className="grid gap-2">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Projects</h2>
-                <Button variant="ghost" size="icon">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setStage(Stage.SkillVouchRequest)}
+                >
                   <PlusIcon className="h-4 w-4" />
                   <span className="sr-only">Add Project</span>
                 </Button>

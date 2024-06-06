@@ -17,7 +17,8 @@ import { useEffect, useState } from "react";
 
 const VouchingProcess = () => {
   const APIURL =
-    "https://api.studio.thegraph.com/query/77624/skillvouchdao/version/latest";
+    "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.3";
+
   const [fetch, setFetch] = useState(false);
 
   const {

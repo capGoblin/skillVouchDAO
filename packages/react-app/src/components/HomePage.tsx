@@ -76,7 +76,7 @@ export default function Component() {
         // "0x966efc9A9247116398441d87085637400A596C3F",
         const signerT = await providerT.getSigner();
         const contractT = new ethers.Contract(
-          "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0",
+          "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4",
           SkillVouchContract.abi,
           signerT
         );
