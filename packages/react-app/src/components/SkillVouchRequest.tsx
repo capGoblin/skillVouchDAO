@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useStore } from "../store/store";
 import { SkillVouchDialog } from "./SkillVouchDialog";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
-import GET_REQ_BY_USER from "../../constants/subgraphQueries";
+import { GET_REQ_BY_USER } from "../../constants/subgraphQueries";
 import { Client, cacheExchange, fetchExchange } from "@urql/core";
 import { Variable } from "lucide-react";
 
@@ -133,17 +133,19 @@ const SkillVouchRequest = () => {
     setFetch(true);
   };
 
-  function moveToVouchingProcess(index: number) {
-    // const item = stageOneInputs[index];
+  function moveToVouchingProcess(id: number) {
+    const index = stageOneInputs.findIndex((item) => item.requestId === id);
 
-    // const newStageOneInputs = [...stageOneInputs];
-    // newStageOneInputs.splice(index, 1);
-    // setStageOneInputs(newStageOneInputs);
+    const item = stageOneInputs[index];
 
-    // const newStageTwoInputs = [...stageTwoInputs, { ...item, NoOfVouched: 0 }];
-    // setStageTwoInputs(newStageTwoInputs);
+    const newStageOneInputs = [...stageOneInputs];
+    newStageOneInputs.splice(index, 1);
+    setStageOneInputs(newStageOneInputs);
 
-    contract.transitionRequestStatus(index, 0);
+    const newStageTwoInputs = [...stageTwoInputs, { ...item, NoOfVouched: 0 }];
+    setStageTwoInputs(newStageTwoInputs);
+
+    // contract.transitionRequestStatus(id, 0);
   }
 
   return (

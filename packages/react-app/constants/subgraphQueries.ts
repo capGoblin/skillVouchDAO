@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-const GET_REQ_BY_USER = gql`
+export const GET_REQ_BY_USER = gql`
   query GetRequestsByUser($userAddress: String!) {
     requestCreateds(where: { user: $userAddress }) {
       id
@@ -13,4 +13,32 @@ const GET_REQ_BY_USER = gql`
     }
   }
 `;
-export default GET_REQ_BY_USER;
+
+export const GET_REQS = gql`
+  {
+    requestCreateds {
+      id
+      requestId
+      user
+      skill
+      experience
+      project
+    }
+  }
+`;
+
+export const GET_VOUCHED = gql`
+  query GetVouched($id: BigInt!) {
+    skillVoucheds(where: { requestId: $id }) {
+      vouchor
+    }
+  }
+`;
+export const GET_VOTES = gql`
+  query GetVotes($id: BigInt!) {
+    voteCasteds(where: { requestId: $id }) {
+      requestId
+      acceptance
+    }
+  }
+`;

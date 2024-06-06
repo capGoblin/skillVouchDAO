@@ -7,17 +7,98 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { useStore } from "../store/store";
+import { Client, cacheExchange, fetchExchange } from "@urql/core";
+import { GET_REQS, GET_VOUCHED } from "../../constants/subgraphQueries";
+import { useEffect } from "react";
 
 const VouchingProcess = () => {
+  const APIURL =
+    "https://api.studio.thegraph.com/query/77624/skillvouchdao/version/latest";
   const {
     stageTwoInputs,
     setStageTwoInputs,
     stageThreeInputs,
     setStageThreeInputs,
     contract,
+    signer,
   } = useStore();
 
-  function moveToCommunityValidation(index: any) {
+  const queryData = async () => {
+    const address = await signer.getAddress();
+
+    const client = new Client({
+      url: APIURL,
+      exchanges: [cacheExchange, fetchExchange],
+    });
+
+    const data = await client.query(GET_REQS, {}).toPromise();
+
+    console.log(address);
+    console.log(client);
+
+    console.log(data);
+
+    return data.data;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data: any = await queryData();
+      const requestData = data.requestCreateds;
+      const requestIdArray = requestData.map(
+        (item: { requestId: any }) => item.requestId
+      );
+
+      console.log(requestData);
+      console.log(requestIdArray);
+
+      const client = new Client({
+        url: APIURL,
+        exchanges: [cacheExchange, fetchExchange],
+      });
+
+      const resultDictionary: { [key: string]: number } = {};
+      await Promise.all(
+        requestIdArray.map(async (id: any) => {
+          const data = await client.query(GET_VOUCHED, { id }).toPromise();
+          resultDictionary[id] = data.data.skillVoucheds.length;
+        })
+      );
+
+      const filteredData = requestData
+        .map(
+          (item: {
+            requestId: any;
+            skill: any;
+            experience: string;
+            project: string;
+          }) => {
+            if (item.experience !== "" || item.project !== "") {
+              return {
+                requestId: Number(item.requestId),
+                skills: item.skill,
+                POW: item.experience !== "" ? item.experience : item.project,
+                selectedPOW: item.experience !== "" ? "Experience" : "Project",
+                linkedin: "",
+                github: "",
+                NoOfVouched: Number(resultDictionary[item.requestId]) || 0,
+              };
+            }
+          }
+        )
+        .filter(Boolean);
+
+      console.log(filteredData);
+
+      setStageTwoInputs(filteredData);
+    };
+
+    fetchData();
+  }, [fetch]);
+
+  function moveToCommunityValidation(id: any) {
+    const index = stageTwoInputs.findIndex((item) => item.requestId === id);
+
     const item = stageTwoInputs[index];
 
     const newStageTwoInputs = [...stageTwoInputs];
@@ -30,7 +111,7 @@ const VouchingProcess = () => {
     ];
     setStageThreeInputs(newStageThreeInputs);
 
-    contract.moveRequestToCommunityValidation(index);
+    contract.moveRequestToCommunityValidation(id);
   }
 
   return (
@@ -38,7 +119,7 @@ const VouchingProcess = () => {
       <main className="flex-1 overflow-auto p-6 md:p-10">
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {stageTwoInputs.map((input, index) => (
-            <Card>
+            <Card key={index}>
               <CardHeader className="flex items-center gap-4">
                 <Avatar>
                   <img src="/placeholder.svg" alt="User Avatar" />
@@ -77,13 +158,13 @@ const VouchingProcess = () => {
                 <Button
                   variant="outline"
                   className="w-full"
-                  onClick={() => contract.vouchForSkill(index)}
+                  onClick={() => contract.vouchForSkill(input.requestId)}
                 >
                   Vouch
                 </Button>
                 <Button
                   onClick={() => {
-                    moveToCommunityValidation(index);
+                    moveToCommunityValidation(input.requestId);
                   }}
                   className="mr-20"
                 >
