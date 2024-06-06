@@ -37,6 +37,8 @@ export function handleRequestCreated(event: RequestCreatedEvent): void {
   entity.project = event.params.project
   entity.experience = event.params.experience
   entity.stakeAmount = event.params.stakeAmount
+  entity.linkedInLink = event.params.linkedInLink
+  entity.gitHubLink = event.params.gitHubLink
 
   entity.blockNumber = event.block.number
   entity.blockTimestamp = event.block.timestamp

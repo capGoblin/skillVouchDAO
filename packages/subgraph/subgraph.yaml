@@ -8,9 +8,9 @@ dataSources:
     name: SkillVouchContract
     network: sepolia
     source:
-      address: "0x966efc9A9247116398441d87085637400A596C3F"
+      address: "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4"
       abi: SkillVouchContract
-      startBlock: 6044727
+      startBlock: 6052335
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
@@ -27,7 +27,7 @@ dataSources:
       eventHandlers:
         - event: RequestClosed(uint256,bool)
           handler: handleRequestClosed
-        - event: RequestCreated(uint256,address,string,string,string,uint256)
+        - event: RequestCreated(uint256,address,string,string,string,uint256,string,string)
           handler: handleRequestCreated
         - event: RequestStatusChanged(uint256,uint8)
           handler: handleRequestStatusChanged

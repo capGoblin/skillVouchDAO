@@ -35,7 +35,9 @@ export function createRequestCreatedEvent(
   skill: string,
   project: string,
   experience: string,
-  stakeAmount: BigInt
+  stakeAmount: BigInt,
+  linkedInLink: string,
+  gitHubLink: string
 ): RequestCreated {
   let requestCreatedEvent = changetype<RequestCreated>(newMockEvent())
 
@@ -64,6 +66,15 @@ export function createRequestCreatedEvent(
       "stakeAmount",
       ethereum.Value.fromUnsignedBigInt(stakeAmount)
     )
+  )
+  requestCreatedEvent.parameters.push(
+    new ethereum.EventParam(
+      "linkedInLink",
+      ethereum.Value.fromString(linkedInLink)
+    )
+  )
+  requestCreatedEvent.parameters.push(
+    new ethereum.EventParam("gitHubLink", ethereum.Value.fromString(gitHubLink))
   )
 
   return requestCreatedEvent

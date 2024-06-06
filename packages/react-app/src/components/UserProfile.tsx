@@ -19,10 +19,10 @@ interface RequestCreated {
 const UserProfile = () => {
   const [name, setName] = useState("John Doe");
   const [title, setTitle] = useState("Software Engineer");
-  const [linkedinUrl, setLinkedinUrl] = useState(
-    "https://www.linkedin.com/in/johndoe"
-  );
-  const [githubUrl, setGithubUrl] = useState("https://github.com/johndoe");
+  // const [linkedInLink, setLinkedInLink] = useState(
+  //   "https://www.linkedin.com/in/johndoe"
+  // );
+  // const [githubLink, setGithubLink] = useState("https://github.com/johndoe");
   const [iconPrompt, setIconPrompt] = useState("User");
   const [showLinkedinInput, setShowLinkedinInput] = useState(false);
   const [showGithubInput, setShowGithubInput] = useState(false);
@@ -31,8 +31,16 @@ const UserProfile = () => {
 
   const APIURL =
     "https://api.studio.thegraph.com/query/77624/skillvouchdao/version/latest";
-  const { stageThreeInputs, setStageThreeInputs, contract, signer } =
-    useStore();
+  const {
+    stageThreeInputs,
+    setStageThreeInputs,
+    contract,
+    signer,
+    setLinkedInLink,
+    setGithubLink,
+    githubLink,
+    linkedInLink,
+  } = useStore();
 
   const [acceptedReqs, setAcceptedReqs] = useState<RequestCreated[]>([]);
 
@@ -190,8 +198,8 @@ const UserProfile = () => {
                   <div className="flex items-center gap-2">
                     <Input
                       type="text"
-                      value={linkedinUrl}
-                      onChange={(e) => setLinkedinUrl(e.target.value)}
+                      value={linkedInLink}
+                      onChange={(e) => setLinkedInLink(e.target.value)}
                       className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                     />
                     <Button
@@ -218,8 +226,8 @@ const UserProfile = () => {
                   <div className="flex items-center gap-2">
                     <Input
                       type="text"
-                      value={githubUrl}
-                      onChange={(e) => setGithubUrl(e.target.value)}
+                      value={githubLink}
+                      onChange={(e) => setGithubLink(e.target.value)}
                       className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                     />
                     <Button

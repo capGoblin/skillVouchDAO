@@ -10,6 +10,8 @@ export const GET_REQ_BY_USER = gql`
       experience
       project
       stakeAmount
+      linkedInLink
+      gitHubLink
     }
   }
 `;
@@ -23,6 +25,8 @@ export const GET_REQS = gql`
       skill
       experience
       project
+      linkedInLink
+      gitHubLink
     }
   }
 `;

@@ -125,6 +125,8 @@ const SkillVouchRequest = () => {
             skill: any;
             experience: string;
             project: string;
+            linkedInLink: string;
+            gitHubLink: string;
           }) => {
             if (
               (item.experience !== "" || item.project !== "") &&
@@ -135,8 +137,8 @@ const SkillVouchRequest = () => {
                 skills: item.skill,
                 POW: item.experience !== "" ? item.experience : item.project,
                 selectedPOW: item.experience !== "" ? "Experience" : "Project",
-                linkedin: linkedInLink,
-                github: githubLink,
+                linkedin: item.linkedInLink,
+                github: item.gitHubLink,
               };
             }
           }

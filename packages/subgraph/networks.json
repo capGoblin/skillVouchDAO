@@ -1,8 +1,8 @@
 {
   "sepolia": {
     "SkillVouchContract": {
-      "address": "0x966efc9A9247116398441d87085637400A596C3F",
-      "startBlock": 6044727
+      "address": "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4",
+      "startBlock": 6052335
     }
   }
 }

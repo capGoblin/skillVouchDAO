@@ -67,6 +67,18 @@
         "internalType": "uint256",
         "name": "stakeAmount",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "linkedInLink",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "gitHubLink",
+        "type": "string"
       }
     ],
     "name": "RequestCreated",
@@ -172,7 +184,9 @@
       { "internalType": "string", "name": "_skill", "type": "string" },
       { "internalType": "string", "name": "_project", "type": "string" },
       { "internalType": "string", "name": "_experience", "type": "string" },
-      { "internalType": "uint256", "name": "_stakeAmount", "type": "uint256" }
+      { "internalType": "uint256", "name": "_stakeAmount", "type": "uint256" },
+      { "internalType": "string", "name": "_linkedInLink", "type": "string" },
+      { "internalType": "string", "name": "_gitHubLink", "type": "string" }
     ],
     "name": "createRequest",
     "outputs": [],

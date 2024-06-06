@@ -15,6 +15,8 @@ type RequestCreated @entity(immutable: true) {
   project: String! # string
   experience: String! # string
   stakeAmount: BigInt! # uint256
+  linkedInLink: String! # string
+  gitHubLink: String! # string
   blockNumber: BigInt!
   blockTimestamp: BigInt!
   transactionHash: Bytes!
