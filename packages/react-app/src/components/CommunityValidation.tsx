@@ -14,8 +14,14 @@ import { useEffect } from "react";
 const CommunityValidation = () => {
   const APIURL =
     "https://api.studio.thegraph.com/query/77624/skillvouchdao/version/latest";
-  const { stageThreeInputs, setStageThreeInputs, contract, signer } =
-    useStore();
+  const {
+    stageThreeInputs,
+    setStageThreeInputs,
+    contract,
+    signer,
+    linkedInLink,
+    githubLink,
+  } = useStore();
 
   const queryData = async () => {
     const address = await signer.getAddress();
@@ -105,15 +111,13 @@ const CommunityValidation = () => {
             project: string;
           }) => {
             if (item.experience !== "" || item.project !== "") {
-              console.log(trueCounts);
-              console.log(falseCounts);
               return {
                 requestId: Number(item.requestId),
                 skills: item.skill,
                 POW: item.experience !== "" ? item.experience : item.project,
                 selectedPOW: item.experience !== "" ? "Experience" : "Project",
-                linkedin: "",
-                github: "",
+                linkedin: linkedInLink,
+                github: githubLink,
                 NoOfVouched: Number(resultDictionary[item.requestId]) || 0,
                 NoOfYesVotes: Number(trueCounts[item.requestId]) || 0,
                 NoOfNoVotes: Number(falseCounts[item.requestId]) || 0,
@@ -132,6 +136,7 @@ const CommunityValidation = () => {
   }, [fetch]);
 
   function voted(id: number, acceptance: boolean): void {
+    console.log(id, acceptance);
     contract.castVote(id, acceptance);
   }
 
@@ -171,6 +176,22 @@ const CommunityValidation = () => {
                 </div>
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Vouched by {input.NoOfVouched} users
+                </div>
+                <div className="flex items-center gap-2 mb-4">
+                  <a
+                    href={linkedInLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <LinkedinIcon className="h-6 w-6" />
+                  </a>
+                  <a
+                    href={githubLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <GithubIcon className="h-6 w-6" />
+                  </a>
                 </div>
               </CardContent>
               <div className="flex justify-evenly space-x-12 mb-8 mr-5">

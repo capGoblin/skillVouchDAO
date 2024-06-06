@@ -15,7 +15,6 @@ const SkillVouchRequest = () => {
   const APIURL =
     "https://api.studio.thegraph.com/query/77624/skillvouchdao/version/latest";
   const [fetch, setFetch] = useState(false);
-
   const {
     stageOneInputs,
     setStageOneInputs,
@@ -23,6 +22,10 @@ const SkillVouchRequest = () => {
     setStageTwoInputs,
     contract,
     signer,
+    linkedInLink,
+    setLinkedInLink,
+    githubLink,
+    setGithubLink,
   } = useStore();
   const queryData = async () => {
     const address = await signer.getAddress();
@@ -132,8 +135,8 @@ const SkillVouchRequest = () => {
                 skills: item.skill,
                 POW: item.experience !== "" ? item.experience : item.project,
                 selectedPOW: item.experience !== "" ? "Experience" : "Project",
-                linkedin: "",
-                github: "",
+                linkedin: linkedInLink,
+                github: githubLink,
               };
             }
           }
@@ -172,6 +175,8 @@ const SkillVouchRequest = () => {
     //     github: github,
     //   },
     // ]);
+    setLinkedInLink(linkedin);
+    setGithubLink(github);
 
     setFetch(true);
   };

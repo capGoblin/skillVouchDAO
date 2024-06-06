@@ -41,6 +41,10 @@ interface State {
   setProvider: (provider: any) => void;
   signer: any;
   setSigner: (signer: any) => void;
+  linkedInLink: string;
+  setLinkedInLink: (value: string) => void;
+  githubLink: string;
+  setGithubLink: (value: string) => void;
 }
 
 export const useStore = create<State>((set) => ({
@@ -58,4 +62,8 @@ export const useStore = create<State>((set) => ({
   setProvider: (provider) => set({ provider }),
   signer: null,
   setSigner: (signer) => set({ signer }),
+  linkedInLink: "",
+  setLinkedInLink: (value: string) => set(() => ({ linkedInLink: value })),
+  githubLink: "",
+  setGithubLink: (value: string) => set(() => ({ githubLink: value })),
 }));

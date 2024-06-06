@@ -279,22 +279,24 @@ const UserProfile = () => {
                 </Button>
               </div>
               <div className="space-y-4">
-                {acceptedReqs.map((req) => (
-                  <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-                    <div className="flex flex-row gap-4">
-                      {req.experience
-                        .split(",")
-                        .map((experience: string) => experience.trim())
-                        .map((experience: string) => (
-                          <h2 className="font-medium">{experience}</h2>
-                        ))}
+                {acceptedReqs.map((req) =>
+                  req.experience.trim() !== "" ? (
+                    <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
+                      <div className="flex flex-row gap-4">
+                        {req.experience
+                          .split(",")
+                          .map((experience: string) => experience.trim())
+                          .map((experience: string) => (
+                            <h2 className="font-medium">{experience}</h2>
+                          ))}
+                      </div>
+                      <Button variant="ghost" size="icon">
+                        <CheckIcon className="h-4 w-4 text-green-500" />
+                        <span className="sr-only">Vouch</span>
+                      </Button>
                     </div>
-                    <Button variant="ghost" size="icon">
-                      <CheckIcon className="h-4 w-4 text-green-500" />
-                      <span className="sr-only">Vouch</span>
-                    </Button>
-                  </div>
-                ))}
+                  ) : null
+                )}
               </div>
             </div>
             <div className="grid gap-2">

@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -30,10 +31,16 @@ export function SkillVouchDialog({ saveChanges }: SkillVouchDialogProps) {
   const [POW, setPOW] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [github, setGithub] = useState("");
+  const [open, setOpen] = useState(false);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
     saveChanges(skills, POW, selectedOption, linkedin, github);
+    setOpen(false);
+  };
+
+  const handleCancel = () => {
+    setOpen(false);
   };
 
   const handleOptionChange = (option: string) => {
@@ -42,7 +49,7 @@ export function SkillVouchDialog({ saveChanges }: SkillVouchDialogProps) {
   };
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button>
           <FaPlus className="mr-5" /> Create New Request
@@ -114,7 +121,9 @@ export function SkillVouchDialog({ saveChanges }: SkillVouchDialogProps) {
             Save Changes
           </Button>
           <div>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" onClick={handleCancel}>
+              Cancel
+            </Button>
           </div>
         </DialogFooter>
       </DialogContent>
