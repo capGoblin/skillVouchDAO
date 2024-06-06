@@ -1,7 +1,9 @@
+import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Client, cacheExchange, fetchExchange } from "@urql/core";
-import { useEffect, useRef, useState } from "react";
+import { ethers } from "ethers";
+import SkillVouchContract from "../../artifacts/contracts/SkillVouchContract.sol/SkillVouchContract.json";
 import { GET_ACCEPTED, GET_REQ_BY_USER } from "../../constants/subgraphQueries";
 import { useStore } from "../store/store";
 import { Input } from "./ui/input";
@@ -43,6 +45,9 @@ const UserProfile = () => {
     setGithubLink,
     githubLink,
     linkedInLink,
+    setContract,
+    setProvider,
+    setSigner,
   } = useStore();
 
   const [acceptedReqs, setAcceptedReqs] = useState<RequestCreated[]>([]);
@@ -66,6 +71,42 @@ const UserProfile = () => {
 
     return data.data;
   };
+
+  useEffect(() => {
+    const initialize = async () => {
+      if (window.ethereum == null) {
+        // If MetaMask is not installed, we use the default provider,
+        // which is backed by a variety of third-party services (such
+        // as INFURA). They do not have private keys installed,
+        // so they only have read-only access
+        console.log("MetaMask not installed; using read-only defaults");
+        setProvider(ethers.getDefaultProvider());
+      } else {
+        // Connect to the MetaMask EIP-1193 object. This is a standard
+        // protocol that allows Ethers access to make all read-only
+        // requests through MetaMask.
+        const providerT = new ethers.BrowserProvider(window.ethereum);
+        // It also provides an opportunity to request access to write
+        // operations, which will be performed by the private key
+        // that MetaMask manages for the user.
+
+        // "0x966efc9A9247116398441d87085637400A596C3F",
+        const signerT = await providerT.getSigner();
+        const contractT = new ethers.Contract(
+          "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4",
+          SkillVouchContract.abi,
+          signerT
+        );
+        setContract(contractT);
+        setSigner(signerT);
+        setProvider(providerT);
+
+        await contractT.mintTokensToNewUsers();
+      }
+    };
+
+    initialize();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
