@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Client, cacheExchange, fetchExchange } from "@urql/core";
-import { ethers } from "ethers";
 import { useEffect, useState } from "react";
 import { GET_REQ_BY_USER, GET_VOUCHED } from "../../constants/subgraphQueries";
 import { useStore } from "../store/store";
@@ -17,9 +16,7 @@ const SkillVouchRequest = () => {
     setStageTwoInputs,
     contract,
     signer,
-    linkedInLink,
     setLinkedInLink,
-    githubLink,
     setGithubLink,
   } = useStore();
   const queryData = async () => {
@@ -155,7 +152,7 @@ const SkillVouchRequest = () => {
     github: string
   ): Promise<void> => {
     // const stakeAmount = "21"; // Set the stake amount
-    const stakeAmountEth = ethers.parseUnits(stakeAmount, 18);
+    // const stakeAmountEth = ethers.parseUnits(stakeAmount, 18);
 
     // const stakeAmountWei = ethers.parseEther(stakeAmount); // Convert to Wei
 

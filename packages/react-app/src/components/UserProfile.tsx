@@ -28,7 +28,7 @@ const UserProfile = () => {
   //   "https://www.linkedin.com/in/johndoe"
   // );
   // const [githubLink, setGithubLink] = useState("https://github.com/johndoe");
-  const [iconPrompt, setIconPrompt] = useState("User");
+  // const [iconPrompt, setIconPrompt] = useState("User");
   const [showLinkedinInput, setShowLinkedinInput] = useState(false);
   const [showGithubInput, setShowGithubInput] = useState(false);
   const [showNameInput, setShowNameInput] = useState(false);
@@ -38,9 +38,6 @@ const UserProfile = () => {
     "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.3";
   const {
     setStage,
-    stageThreeInputs,
-    setStageThreeInputs,
-    contract,
     signer,
     setLinkedInLink,
     setGithubLink,
