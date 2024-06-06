@@ -1,15 +1,10 @@
-import { useEffect, useState } from "react";
-import { ethers } from "ethers";
 import { Button } from "@/components/ui/button";
+import { Client, cacheExchange, fetchExchange } from "@urql/core";
+import { ethers } from "ethers";
+import { useEffect, useState } from "react";
+import { GET_REQ_BY_USER, GET_VOUCHED } from "../../constants/subgraphQueries";
 import { useStore } from "../store/store";
 import { SkillVouchDialog } from "./SkillVouchDialog";
-import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
-import {
-  GET_REQ_BY_USER,
-  GET_VOUCHED,
-  GET_VOTES,
-} from "../../constants/subgraphQueries";
-import { Client, cacheExchange, fetchExchange } from "@urql/core";
 
 const SkillVouchRequest = () => {
   const APIURL =

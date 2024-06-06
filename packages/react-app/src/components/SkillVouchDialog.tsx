@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -11,8 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FaPlus } from "react-icons/fa6";
 import { useState } from "react";
+import { FaPlus } from "react-icons/fa6";
 import { ExperienceOrProjectDropdown } from "./ExperienceOrProjectDropdown";
 
 interface SkillVouchDialogProps {

@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
 import { ethers } from "ethers";
+import { useEffect } from "react";
+import SkillVouchContract from "../../artifacts/contracts/SkillVouchContract.sol/SkillVouchContract.json";
 import { useStore } from "../store/store";
 import CommunityValidation from "./CommunityValidation";
 import SkillVouchRequest from "./SkillVouchRequest";
 import UserProfile from "./UserProfile";
 import VouchingProcess from "./VouchingProcess";
-import SkillVouchContract from "../../artifacts/contracts/SkillVouchContract.sol/SkillVouchContract.json";
 
 enum Stage {
   UserProfile,

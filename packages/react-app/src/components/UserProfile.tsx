@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Client, cacheExchange, fetchExchange } from "@urql/core";
-import { GET_REQ_BY_USER, GET_ACCEPTED } from "../../constants/subgraphQueries";
 import { useEffect, useRef, useState } from "react";
+import { GET_ACCEPTED, GET_REQ_BY_USER } from "../../constants/subgraphQueries";
 import { useStore } from "../store/store";
 import { Input } from "./ui/input";
 enum Stage {
