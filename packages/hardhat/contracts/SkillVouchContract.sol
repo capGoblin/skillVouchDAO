@@ -5,11 +5,11 @@ import "./SkillVouchState.sol";
 
 contract SkillVouchContract {
     SkillVouchState public immutable skillVouchState;
-
-    uint256 constant TOKENSTOUSERS = 50;
-    uint256 constant TOKENSTOCONTRACT = 1000;
-    uint256 constant INCENTIVEAMOUNT = 10;
-    uint256 constant STAKEDAMOUNT = 20;
+    uint256 constant DECIMAL = 10 ** 18;
+    uint256 constant TOKENSTOUSERS = 50 * DECIMAL;
+    uint256 constant TOKENSTOCONTRACT = 1000 * DECIMAL;
+    uint256 constant INCENTIVEAMOUNT = 10 * DECIMAL;
+    uint256 constant STAKEDAMOUNT = 20 * DECIMAL;
 
     mapping(uint256 => address[]) public voted;
     mapping(uint256 => uint256) public acceptVotes;
@@ -45,7 +45,10 @@ contract SkillVouchContract {
         string memory _experience,
         uint256 _stakeAmount
     ) external payable {
-        require(_stakeAmount > 20, "Stake amount must be greater than 20");
+        require(
+            _stakeAmount > 20 * DECIMAL,
+            "Stake amount must be greater than 20"
+        );
 
         uint256 reqId = skillVouchState.add(
             msg.sender,
@@ -101,6 +104,10 @@ contract SkillVouchContract {
 
     function vouchForSkill(uint256 _requestId) external {
         require(
+            skillVouchState.get(_requestId).user != msg.sender,
+            "Not fair man! you cannot vouch yourself"
+        );
+        require(
             skillVouchState.isRequestPresent(_requestId),
             "Request not found"
         );
@@ -128,6 +135,10 @@ contract SkillVouchContract {
 
     function moveRequestToCommunityValidation(uint256 _requestId) external {
         require(
+            skillVouchState.get(_requestId).user == msg.sender,
+            "Other than request author cannot move request"
+        );
+        require(
             skillVouchState.get(_requestId).status == 0,
             "Request is not in Vouching Process phase"
         );
@@ -150,6 +161,10 @@ contract SkillVouchContract {
     // COMMUNITY_VALIDATION
 
     function castVote(uint256 _requestId, bool _acceptance) external {
+        require(
+            skillVouchState.get(_requestId).user != msg.sender,
+            "Not fair man! you cannot vote yourself"
+        );
         require(
             skillVouchState.isRequestPresent(_requestId),
             "Request not found"
@@ -174,6 +189,10 @@ contract SkillVouchContract {
     }
 
     function closeRequest(uint256 _requestId) external {
+        require(
+            skillVouchState.get(_requestId).user == msg.sender,
+            "Other than request author cannot close request"
+        );
         require(
             skillVouchState.isRequestPresent(_requestId),
             "Request not found"
