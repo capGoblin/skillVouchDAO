@@ -6,6 +6,7 @@ import {
   GET_REQS,
   GET_VOTES,
   GET_VOUCHED,
+  GET_CLOSED,
 } from "../../constants/subgraphQueries";
 import { Client, cacheExchange, fetchExchange } from "@urql/core";
 import { useEffect } from "react";
@@ -83,7 +84,19 @@ const CommunityValidation = () => {
         })
       );
 
-      const filteredData = requestData
+      const closedReqs: string[] = [];
+      await Promise.all(
+        requestIdArray.map(async (id: any) => {
+          const data = await client.query(GET_CLOSED, { id }).toPromise();
+          if (data.data.requestCloseds.length == 1) closedReqs.push(id);
+        })
+      );
+
+      const notClosedReqsData = requestData.filter(
+        (item: { requestId: any }) => !closedReqs.includes(item.requestId)
+      );
+
+      const filteredData = notClosedReqsData
         .map(
           (item: {
             requestId: any;
@@ -180,7 +193,7 @@ const CommunityValidation = () => {
                 <Button
                   variant="secondary"
                   className="w-full mx-5"
-                  onClick={() => contract.closeRequest(index)}
+                  onClick={() => contract.closeRequest(input.requestId)}
                 >
                   Close
                 </Button>

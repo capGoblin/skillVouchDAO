@@ -42,3 +42,19 @@ export const GET_VOTES = gql`
     }
   }
 `;
+
+export const GET_ACCEPTED = gql`
+  query GetAcceptedReqs($id: BigInt!) {
+    requestCloseds(where: { requestId: $id, accepted: true }) {
+      requestId
+    }
+  }
+`;
+
+export const GET_CLOSED = gql`
+  query GetClosedReqs($id: BigInt!) {
+    requestCloseds(where: { requestId: $id }) {
+      requestId
+    }
+  }
+`;

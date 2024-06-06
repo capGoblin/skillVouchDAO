@@ -1,7 +1,83 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Client, cacheExchange, fetchExchange } from "@urql/core";
+import { GET_REQ_BY_USER, GET_ACCEPTED } from "../../constants/subgraphQueries";
+import { useEffect, useState } from "react";
+import { useStore } from "../store/store";
+
+interface RequestCreated {
+  id: string;
+  requestId: string;
+  user: string;
+  skill: string;
+  experience: string;
+  project: string;
+  stakeAmount: string;
+}
 
 const UserProfile = () => {
+  const APIURL =
+    "https://api.studio.thegraph.com/query/77624/skillvouchdao/version/latest";
+  const { stageThreeInputs, setStageThreeInputs, contract, signer } =
+    useStore();
+
+  const [acceptedReqs, setAcceptedReqs] = useState<RequestCreated[]>([]);
+
+  const queryData = async () => {
+    const address = await signer.getAddress();
+
+    const client = new Client({
+      url: APIURL,
+      exchanges: [cacheExchange, fetchExchange],
+    });
+
+    const data = await client
+      .query(GET_REQ_BY_USER, { userAddress: `${address}` })
+      .toPromise();
+
+    console.log(address);
+    console.log(client);
+
+    console.log(data);
+
+    return data.data;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data: any = await queryData();
+      const requestData = data.requestCreateds;
+      console.log(requestData);
+      const requestIdArray = requestData.map(
+        (item: { requestId: any }) => item.requestId
+      );
+
+      console.log(requestData);
+      console.log(requestIdArray);
+
+      const client = new Client({
+        url: APIURL,
+        exchanges: [cacheExchange, fetchExchange],
+      });
+
+      // const resultDictionary: { [key: string]: number } = {};
+      const acceptedReqs: string[] = [];
+      await Promise.all(
+        requestIdArray.map(async (id: any) => {
+          const data = await client.query(GET_ACCEPTED, { id }).toPromise();
+          if (data.data.requestCloseds.length == 1) acceptedReqs.push(id);
+        })
+      );
+
+      const acceptedReqsData: RequestCreated[] = requestData.filter(
+        (item: { requestId: any }) => acceptedReqs.includes(item.requestId)
+      );
+      setAcceptedReqs(acceptedReqsData);
+    };
+
+    fetchData();
+  }, []);
+
   return (
     <div className="flex flex-col">
       <main className="flex-1 overflow-auto p-6 md:p-10">
@@ -31,12 +107,14 @@ const UserProfile = () => {
                 </Button>
               </div>
               <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-                <Badge variant="secondary">JavaScript</Badge>
-                <Badge variant="secondary">React</Badge>
-                <Badge variant="secondary">Node.js</Badge>
-                <Badge variant="secondary">TypeScript</Badge>
-                <Badge variant="secondary">CSS</Badge>
-                <Badge variant="secondary">Git</Badge>
+                {acceptedReqs.map((req) =>
+                  req.skill
+                    .split(",")
+                    .map((skill: string) => skill.trim())
+                    .map((skill: string) => (
+                      <Badge variant="secondary">{skill}</Badge>
+                    ))
+                )}
               </div>
             </div>
             <div className="grid gap-2">
@@ -48,44 +126,22 @@ const UserProfile = () => {
                 </Button>
               </div>
               <div className="space-y-4">
-                <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-                  <img
-                    src="/placeholder.svg"
-                    width="48"
-                    height="48"
-                    alt="Company Logo"
-                    className="h-12 w-12 rounded-md object-contain"
-                  />
-                  <div>
-                    <h3 className="font-medium">Software Engineer</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Acme Inc. • 2019 - Present
-                    </p>
+                {acceptedReqs.map((req) => (
+                  <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
+                    <div className="flex flex-row gap-4">
+                      {req.experience
+                        .split(",")
+                        .map((experience: string) => experience.trim())
+                        .map((experience: string) => (
+                          <h3 className="font-medium">{experience}</h3>
+                        ))}
+                    </div>
+                    <Button variant="ghost" size="icon">
+                      <CheckIcon className="h-4 w-4 text-green-500" />
+                      <span className="sr-only">Vouch</span>
+                    </Button>
                   </div>
-                  <Button variant="ghost" size="icon">
-                    <CheckIcon className="h-4 w-4 text-green-500" />
-                    <span className="sr-only">Vouch</span>
-                  </Button>
-                </div>
-                <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-                  <img
-                    src="/placeholder.svg"
-                    width="48"
-                    height="48"
-                    alt="Company Logo"
-                    className="h-12 w-12 rounded-md object-contain"
-                  />
-                  <div>
-                    <h3 className="font-medium">Intern</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Globex Corp. • 2018 - 2019
-                    </p>
-                  </div>
-                  <Button variant="ghost" size="icon">
-                    <CheckIcon className="h-4 w-4 text-green-500" />
-                    <span className="sr-only">Vouch</span>
-                  </Button>
-                </div>
+                ))}
               </div>
             </div>
             <div className="grid gap-2">
@@ -97,44 +153,24 @@ const UserProfile = () => {
                 </Button>
               </div>
               <div className="space-y-4">
-                <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-                  <img
-                    src="/placeholder.svg"
-                    width="48"
-                    height="48"
-                    alt="Project Thumbnail"
-                    className="h-12 w-12 rounded-md object-cover"
-                  />
-                  <div>
-                    <h3 className="font-medium">Acme Web App</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Developed a modern web application for Acme Inc.
-                    </p>
-                  </div>
-                  <Button variant="ghost" size="icon">
-                    <CheckIcon className="h-4 w-4 text-green-500" />
-                    <span className="sr-only">Vouch</span>
-                  </Button>
-                </div>
-                <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
-                  <img
-                    src="/placeholder.svg"
-                    width="48"
-                    height="48"
-                    alt="Project Thumbnail"
-                    className="h-12 w-12 rounded-md object-cover"
-                  />
-                  <div>
-                    <h3 className="font-medium">Globex Mobile App</h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      Designed and developed a mobile app for Globex Corp.
-                    </p>
-                  </div>
-                  <Button variant="ghost" size="icon">
-                    <CheckIcon className="h-4 w-4 text-green-500" />
-                    <span className="sr-only">Vouch</span>
-                  </Button>
-                </div>
+                {acceptedReqs.map((req) =>
+                  req.project.trim() !== "" ? (
+                    <div className="grid grid-cols-[auto_1fr_auto] items-center gap-4">
+                      <div className="flex flex-row gap-4">
+                        {req.project
+                          .split(",")
+                          .map((project: string) => project.trim())
+                          .map((project: string) => (
+                            <h3 className="font-medium">{project}</h3>
+                          ))}
+                      </div>
+                      <Button variant="ghost" size="icon">
+                        <CheckIcon className="h-4 w-4 text-green-500" />
+                        <span className="sr-only">Vouch</span>
+                      </Button>
+                    </div>
+                  ) : null
+                )}
               </div>
             </div>
           </div>
