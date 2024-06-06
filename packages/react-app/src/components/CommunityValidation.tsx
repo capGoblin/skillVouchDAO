@@ -92,6 +92,8 @@ const CommunityValidation = () => {
             project: string;
           }) => {
             if (item.experience !== "" || item.project !== "") {
+              console.log(trueCounts);
+              console.log(falseCounts);
               return {
                 requestId: Number(item.requestId),
                 skills: item.skill,

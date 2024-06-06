@@ -4,11 +4,16 @@ import { Button } from "@/components/ui/button";
 import { useStore } from "../store/store";
 import { SkillVouchDialog } from "./SkillVouchDialog";
 import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
-import { GET_REQ_BY_USER } from "../../constants/subgraphQueries";
+import {
+  GET_REQ_BY_USER,
+  GET_VOUCHED,
+  GET_VOTES,
+} from "../../constants/subgraphQueries";
 import { Client, cacheExchange, fetchExchange } from "@urql/core";
-import { Variable } from "lucide-react";
 
 const SkillVouchRequest = () => {
+  const APIURL =
+    "https://api.studio.thegraph.com/query/77624/skillvouchdao/version/latest";
   const [fetch, setFetch] = useState(false);
 
   const {
@@ -20,8 +25,6 @@ const SkillVouchRequest = () => {
     signer,
   } = useStore();
   const queryData = async () => {
-    const APIURL =
-      "https://api.studio.thegraph.com/query/77624/skillvouchdao/version/latest";
     const address = await signer.getAddress();
     // const client = new ApolloClient({
     //   uri: APIURL,
@@ -75,6 +78,43 @@ const SkillVouchRequest = () => {
       const data: any = await queryData();
       const requestData = data.requestCreateds;
 
+      const requestIdArray = requestData.map(
+        (item: { requestId: any }) => item.requestId
+      );
+
+      console.log(requestData);
+      console.log(requestIdArray);
+
+      const client = new Client({
+        url: APIURL,
+        exchanges: [cacheExchange, fetchExchange],
+      });
+
+      const resultDictionary: { [key: string]: number } = {};
+      await Promise.all(
+        requestIdArray.map(async (id: any) => {
+          const data = await client.query(GET_VOUCHED, { id }).toPromise();
+          resultDictionary[id] = data.data.skillVoucheds.length;
+        })
+      );
+
+      // const trueCounts: { [key: string]: number } = {};
+      // const falseCounts: { [key: string]: number } = {};
+
+      // await Promise.all(
+      //   requestIdArray.map(async (id: any) => {
+      //     const data = await client.query(GET_VOTES, { id }).toPromise();
+
+      //     data.data.voteCasteds.forEach((vote: { acceptance: any }) => {
+      //       if (vote.acceptance) {
+      //         trueCounts[id]++;
+      //       } else {
+      //         falseCounts[id]++;
+      //       }
+      //     });
+      //   })
+      // );
+
       const filteredData = requestData
         .map(
           (item: {
@@ -83,7 +123,10 @@ const SkillVouchRequest = () => {
             experience: string;
             project: string;
           }) => {
-            if (item.experience !== "" || item.project !== "") {
+            if (
+              (item.experience !== "" || item.project !== "") &&
+              !resultDictionary[item.requestId]
+            ) {
               return {
                 requestId: Number(item.requestId),
                 skills: item.skill,

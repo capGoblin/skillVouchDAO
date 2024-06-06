@@ -8,7 +8,11 @@ import {
 } from "@/components/ui/card";
 import { useStore } from "../store/store";
 import { Client, cacheExchange, fetchExchange } from "@urql/core";
-import { GET_REQS, GET_VOUCHED } from "../../constants/subgraphQueries";
+import {
+  GET_REQS,
+  GET_VOUCHED,
+  GET_VOTES,
+} from "../../constants/subgraphQueries";
 import { useEffect } from "react";
 
 const VouchingProcess = () => {
@@ -65,6 +69,31 @@ const VouchingProcess = () => {
         })
       );
 
+      const trueCounts: { [key: string]: number } = {};
+      const falseCounts: { [key: string]: number } = {};
+
+      await Promise.all(
+        requestIdArray.map(async (id: any) => {
+          const data = await client.query(GET_VOTES, { id }).toPromise();
+
+          if (!trueCounts[id]) {
+            trueCounts[id] = 0;
+          }
+
+          if (!falseCounts[id]) {
+            falseCounts[id] = 0;
+          }
+
+          data.data.voteCasteds.forEach((vote: { acceptance: any }) => {
+            if (vote.acceptance) {
+              trueCounts[id]++;
+            } else {
+              falseCounts[id]++;
+            }
+          });
+        })
+      );
+
       const filteredData = requestData
         .map(
           (item: {
@@ -73,7 +102,11 @@ const VouchingProcess = () => {
             experience: string;
             project: string;
           }) => {
-            if (item.experience !== "" || item.project !== "") {
+            if (
+              (item.experience !== "" || item.project !== "") &&
+              Number(trueCounts[item.requestId]) === 0 &&
+              Number(trueCounts[item.requestId]) === 0
+            ) {
               return {
                 requestId: Number(item.requestId),
                 skills: item.skill,
