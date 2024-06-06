@@ -7,6 +7,7 @@ enum Stage {
   CommunityValidation,
 }
 interface BaseProfile {
+  requestId: number;
   skills: string;
   POW: string;
   selectedPOW: string;

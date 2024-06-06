@@ -69,21 +69,20 @@ export default function Component() {
         // protocol that allows Ethers access to make all read-only
         // requests through MetaMask.
         const providerT = new ethers.BrowserProvider(window.ethereum);
-        setProvider(providerT);
-
         // It also provides an opportunity to request access to write
         // operations, which will be performed by the private key
         // that MetaMask manages for the user.
         const signerT = await providerT.getSigner();
-        setSigner(signerT);
-
         const contractT = new ethers.Contract(
           "0x966efc9A9247116398441d87085637400A596C3F",
           SkillVouchContract.abi,
           signerT
         );
         setContract(contractT);
-        contractT.mintTokensToNewUsers();
+        setSigner(signerT);
+        setProvider(providerT);
+
+        await contractT.mintTokensToNewUsers();
       }
     };
 

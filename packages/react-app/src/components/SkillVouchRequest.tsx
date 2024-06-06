@@ -1,65 +1,147 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { Button } from "@/components/ui/button";
 import { useStore } from "../store/store";
 import { SkillVouchDialog } from "./SkillVouchDialog";
+import { ApolloClient, InMemoryCache, gql } from "@apollo/client";
+import GET_REQ_BY_USER from "../../constants/subgraphQueries";
+import { Client, cacheExchange, fetchExchange } from "@urql/core";
+import { Variable } from "lucide-react";
 
 const SkillVouchRequest = () => {
+  const [fetch, setFetch] = useState(false);
+
   const {
     stageOneInputs,
     setStageOneInputs,
     stageTwoInputs,
     setStageTwoInputs,
     contract,
+    signer,
   } = useStore();
+  const queryData = async () => {
+    const APIURL =
+      "https://api.studio.thegraph.com/query/77624/skillvouchdao/version/latest";
+    const address = await signer.getAddress();
+    // const client = new ApolloClient({
+    //   uri: APIURL,
+    //   cache: new InMemoryCache(),
+    // });
+    const client = new Client({
+      url: APIURL,
+      exchanges: [cacheExchange, fetchExchange],
+    });
 
-  const saveChanges = (
+    //     const query = `
+    //     query GetRequestsByUser($userAddress: String!) {
+    //       requestCreateds(where: { user: $userAddress }) {
+    //         id
+    //         requestId
+    //         user
+    //         skill
+    //         experience
+    //         project
+    //         stakeAmount
+    //       }
+    //     }
+    // `;
+
+    // const variables = {
+    //   userAddress: `${address}`,
+    // };
+
+    const data = await client
+      .query(GET_REQ_BY_USER, { userAddress: `${address}` })
+      .toPromise();
+
+    // const { data } = await client.query(GET_REQ_BY_USER, variables).toPromise();
+
+    // const { data } = await client
+    //   .query(query, Variable, {
+    //     userAddress: `${address}`,
+    //   })
+    //   .toPromise();
+
+    console.log(address);
+    console.log(client);
+
+    console.log(data);
+
+    return data.data;
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data: any = await queryData();
+      const requestData = data.requestCreateds;
+
+      const filteredData = requestData
+        .map(
+          (item: {
+            requestId: any;
+            skill: any;
+            experience: string;
+            project: string;
+          }) => {
+            if (item.experience !== "" || item.project !== "") {
+              return {
+                requestId: Number(item.requestId),
+                skills: item.skill,
+                POW: item.experience !== "" ? item.experience : item.project,
+                selectedPOW: item.experience !== "" ? "Experience" : "Project",
+                linkedin: "",
+                github: "",
+              };
+            }
+          }
+        )
+        .filter(Boolean);
+
+      setStageOneInputs(filteredData);
+    };
+
+    fetchData();
+  }, [fetch]);
+
+  const saveChanges = async (
     skills: string,
     POW: string,
     selectedPOW: string,
     linkedin: string,
     github: string
-  ): void => {
-    setStageOneInputs([
-      ...stageOneInputs,
-      {
-        skills: skills,
-        POW: POW,
-        selectedPOW: selectedPOW,
-        linkedin: linkedin,
-        github: github,
-      },
-    ]);
+  ): Promise<void> => {
+    const stakeAmount = 21; // Set the stake amount
+    // const stakeAmountWei = ethers.parseUnits(stakeAmount, 18);
 
-    const stakeAmount = 20; // Set the stake amount
-
-    const stakeAmountWei = ethers.parseEther(`${stakeAmount}`); // Convert to Wei
-
-    if (selectedPOW == "Experience") {
-      contract.createRequest(skills, "", POW, stakeAmountWei, {
-        value: stakeAmountWei,
-      });
-    } // Convert to Wei
+    // const stakeAmountWei = ethers.parseEther(stakeAmount); // Convert to Wei
 
     if (selectedPOW == "Experience")
-      contract.createRequest(skills, "", POW, stakeAmountWei, {
-        value: stakeAmountWei,
-      });
-    else
-      contract.createRequest(skills, POW, "", stakeAmountWei, {
-        value: stakeAmountWei,
-      });
+      await contract.createRequest(skills, "", POW, stakeAmount);
+    else await contract.createRequest(skills, POW, "", stakeAmount);
+
+    // setStageOneInputs([
+    //   ...stageOneInputs,
+    //   {
+    //     skills: skills,
+    //     POW: POW,
+    //     selectedPOW: selectedPOW,
+    //     linkedin: linkedin,
+    //     github: github,
+    //   },
+    // ]);
+
+    setFetch(true);
   };
 
   function moveToVouchingProcess(index: number) {
-    const item = stageOneInputs[index];
+    // const item = stageOneInputs[index];
 
-    const newStageOneInputs = [...stageOneInputs];
-    newStageOneInputs.splice(index, 1);
-    setStageOneInputs(newStageOneInputs);
+    // const newStageOneInputs = [...stageOneInputs];
+    // newStageOneInputs.splice(index, 1);
+    // setStageOneInputs(newStageOneInputs);
 
-    const newStageTwoInputs = [...stageTwoInputs, { ...item, NoOfVouched: 0 }];
-    setStageTwoInputs(newStageTwoInputs);
+    // const newStageTwoInputs = [...stageTwoInputs, { ...item, NoOfVouched: 0 }];
+    // setStageTwoInputs(newStageTwoInputs);
 
     contract.transitionRequestStatus(index, 0);
   }
@@ -71,7 +153,7 @@ const SkillVouchRequest = () => {
           <SkillVouchDialog saveChanges={saveChanges} />{" "}
         </div>
         <div className="grid grid-cols-2 gap-40 mr-32">
-          {stageOneInputs.map((input, index) => (
+          {stageOneInputs.map((input: any, index) => (
             <div className="grid gap-5" key={index}>
               <div className="flex mb-4 space-x-11">
                 <div className="font-bold text-lg">Skills</div>
@@ -99,7 +181,7 @@ const SkillVouchRequest = () => {
               </div>
               <Button
                 onClick={() => {
-                  moveToVouchingProcess(index);
+                  moveToVouchingProcess(input.requestId);
                 }}
                 className="mr-20"
               >
