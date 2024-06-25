@@ -198,8 +198,7 @@ const CommunityValidation = () => {
               </CardContent>
               <div className="flex justify-evenly space-x-12 mb-8 mr-5">
                 <Button
-                  variant="green"
-                  className="w-1/2 mx-5"
+                  className="w-1/2 mx-5 bg-green-600"
                   onClick={() => voted(input.requestId, true)}
                 >
                   Yes

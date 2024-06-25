@@ -1,8 +1,8 @@
 import create from "zustand";
 
-enum Stage {
+export enum Stage {
+  HomePage,
   UserProfile,
-  SkillVouchRequest,
   VouchingProcess,
   CommunityValidation,
 }
@@ -48,7 +48,7 @@ interface State {
 }
 
 export const useStore = create<State>((set) => ({
-  stage: Stage.UserProfile,
+  stage: Stage.HomePage,
   setStage: (stage) => set({ stage }),
   stageOneInputs: [],
   setStageOneInputs: (inputs) => set({ stageOneInputs: inputs }),

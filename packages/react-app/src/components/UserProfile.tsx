@@ -5,14 +5,11 @@ import { Client, cacheExchange, fetchExchange } from "@urql/core";
 import { ethers } from "ethers";
 import SkillVouchContract from "../../artifacts/contracts/SkillVouchContract.sol/SkillVouchContract.json";
 import { GET_ACCEPTED, GET_REQ_BY_USER } from "../../constants/subgraphQueries";
-import { useStore } from "../store/store";
 import { Input } from "./ui/input";
-enum Stage {
-  UserProfile,
-  SkillVouchRequest,
-  VouchingProcess,
-  CommunityValidation,
-}
+import { Stage, useStore } from "../store/store";
+import { SkillVouchDialog } from "./SkillVouchDialog";
+import { NFTGlareCard } from "./NFTGlareCard";
+
 interface RequestCreated {
   id: string;
   requestId: string;
@@ -24,17 +21,11 @@ interface RequestCreated {
 }
 
 const UserProfile = () => {
-  const [name, setName] = useState("John Doe");
-  const [title, setTitle] = useState("Software Engineer");
   // const [linkedInLink, setLinkedInLink] = useState(
   //   "https://www.linkedin.com/in/johndoe"
   // );
   // const [githubLink, setGithubLink] = useState("https://github.com/johndoe");
   // const [iconPrompt, setIconPrompt] = useState("User");
-  const [showLinkedinInput, setShowLinkedinInput] = useState(false);
-  const [showGithubInput, setShowGithubInput] = useState(false);
-  const [showNameInput, setShowNameInput] = useState(false);
-  const [showTitleInput, setShowTitleInput] = useState(false);
 
   const APIURL =
     "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.3";
@@ -143,190 +134,60 @@ const UserProfile = () => {
     fetchData();
   }, []);
 
-  const [selectedImage, setSelectedImage] = useState(
-    "../../public/default-avatar-profile-icon-social-600nw-1677509740.webp"
-  );
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const saveChanges = async (
+    skills: string,
+    POW: string,
+    selectedPOW: string,
+    stakeAmount: string,
+    linkedin: string,
+    github: string
+  ): Promise<void> => {
+    // const stakeAmount = "21"; // Set the stake amount
+    // const stakeAmountEth = ethers.parseUnits(stakeAmount, 18);
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files && event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
+    // const stakeAmountWei = ethers.parseEther(stakeAmount); // Convert to Wei
 
-      reader.onloadend = () => {
-        setSelectedImage(reader.result as string);
-      };
+    // if (selectedPOW == "Experience")
+    //   await contract.createRequest(
+    //     skills,
+    //     "",
+    //     POW,
+    //     Number(stakeAmount),
+    //     linkedin,
+    //     github
+    //   );
+    // else
+    //   await contract.createRequest(
+    //     skills,
+    //     POW,
+    //     "",
+    //     Number(stakeAmount),
+    //     linkedin,
+    //     github
+    //   );
 
-      reader.readAsDataURL(file);
-    }
-  };
+    // setStageOneInputs([
+    //   ...stageOneInputs,
+    //   {
+    //     skills: skills,
+    //     POW: POW,
+    //     selectedPOW: selectedPOW,
+    //     linkedin: linkedin,
+    //     github: github,
+    //   },
+    // ]);
+    setLinkedInLink(linkedin);
+    setGithubLink(github);
 
-  const handleImageClick = () => {
-    fileInputRef.current?.click();
+    // setFetch(true);
   };
 
   return (
-    <div className="flex flex-col">
-      <main className="flex-1 overflow-auto p-6 md:p-10">
-        <div className="grid gap-6 md:grid-cols-[3fr_9fr] lg:gap-10 px-20">
-          {" "}
-          <div className="flex flex-col items-center px-4">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              ref={fileInputRef}
-              style={{ display: "none" }}
-            />
-            <img
-              src={selectedImage}
-              width="180"
-              height="180"
-              alt="User Avatar"
-              className="h-[180px] w-[180px] rounded-full object-cover"
-              onClick={handleImageClick}
-            />
-            <div className="text-center">
-              {showNameInput ? (
-                <div className="flex items-center">
-                  <Input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="text-2xl font-bold"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setShowNameInput(false)}
-                  >
-                    <CheckIcon className="h-5 w-5" />
-                    <span className="sr-only">Save Name</span>
-                  </Button>
-                </div>
-              ) : (
-                <div
-                  className="text-2xl font-bold cursor-pointer m-3"
-                  onClick={() => setShowNameInput(true)}
-                >
-                  {name}
-                </div>
-              )}
-              {showTitleInput ? (
-                <div className="flex items-center gap-2">
-                  <Input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    className="text-gray-500 dark:text-gray-400"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setShowTitleInput(false)}
-                  >
-                    <CheckIcon className="h-5 w-5" />
-                    <span className="sr-only">Save Title</span>
-                  </Button>
-                </div>
-              ) : (
-                <div
-                  className="text-gray-500 dark:text-gray-400 cursor-pointer m-3"
-                  onClick={() => setShowTitleInput(true)}
-                >
-                  {title}
-                </div>
-              )}
-              <div className="flex items-center justify-center gap-2 mt-4">
-                {showLinkedinInput ? (
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="text"
-                      value={linkedInLink}
-                      onChange={(e) => setLinkedInLink(e.target.value)}
-                      className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setShowLinkedinInput(false)}
-                    >
-                      <CheckIcon className="h-5 w-5" />
-                      <span className="sr-only">Save LinkedIn</span>
-                    </Button>
-                  </div>
-                ) : (
-                  <a
-                    href={linkedInLink}
-                    target="_blank"
-                    className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                    onClick={() => setShowLinkedinInput(true)}
-                  >
-                    <LinkedinIcon className="h-5 w-5" />
-                    <span className="sr-only">LinkedIn</span>
-                  </a>
-                )}
-                {showGithubInput ? (
-                  <div className="flex items-center gap-2">
-                    <Input
-                      type="text"
-                      value={githubLink}
-                      onChange={(e) => setGithubLink(e.target.value)}
-                      className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                    />
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setShowGithubInput(false)}
-                    >
-                      <CheckIcon className="h-5 w-5" />
-                      <span className="sr-only">Save GitHub</span>
-                    </Button>
-                  </div>
-                ) : (
-                  <a
-                    href={githubLink}
-                    target="_blank"
-                    className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
-                    onClick={() => setShowGithubInput(true)}
-                  >
-                    <GithubIcon className="h-5 w-5" />
-                    <span className="sr-only">GitHub</span>
-                  </a>
-                )}
-              </div>
-            </div>
-            <Badge variant="outline" className="mt-6">
-              Verified
-            </Badge>
-          </div>
-          <div className="grid gap-6">
-            <div className="grid gap-2">
-              <div className="flex items-center justify-between">
-                <h2 className="text-lg font-semibold">Skills</h2>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setStage(Stage.SkillVouchRequest)}
-                >
-                  <PlusIcon className="h-4 w-4" />
-                  <span className="sr-only">Add Skill</span>
-                </Button>
-              </div>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-4">
-                {acceptedReqs.map((req) => (
-                  <div className="flex items-center gap-2">
-                    {req.skill
-                      .split(",")
-                      .map((skill: string) => skill.trim())
-                      .map((skill: string) => (
-                        <Badge variant="secondary">{skill}</Badge>
-                      ))}
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="grid gap-2">
+    <div className="flex flex-col items-center">
+      <main className="flex justify-center items-center p-10 m-8">
+        <NFTGlareCard />
+
+        {/* <div className="grid gap-2">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Experience</h2>
                 <Button
@@ -391,10 +252,11 @@ const UserProfile = () => {
                   ) : null
                 )}
               </div>
-            </div>
-          </div>
-        </div>
+            </div> */}
       </main>
+      <div className="flex justify-center">
+        <SkillVouchDialog saveChanges={saveChanges} />
+      </div>
     </div>
   );
 };

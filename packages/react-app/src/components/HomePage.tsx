@@ -1,15 +1,11 @@
-import { useStore } from "../store/store";
 import CommunityValidation from "./CommunityValidation";
+import Hero from "./Hero";
+import { Navbar } from "./NavBar";
 import SkillVouchRequest from "./SkillVouchRequest";
 import UserProfile from "./UserProfile";
-import VouchingProcess from "./VouchingProcess";
+import { Stage, useStore } from "../store/store";
 
-enum Stage {
-  UserProfile,
-  SkillVouchRequest,
-  VouchingProcess,
-  CommunityValidation,
-}
+import VouchingProcess from "./VouchingProcess";
 interface BaseProfile {
   skills: string;
   POW: string;
@@ -28,88 +24,95 @@ interface CommunityValidation extends VouchingProcess {
   NoOfYesVotes: number;
   NoOfNoVotes: number;
 }
-declare global {
-  interface Window {
-    ethereum: any;
-  }
-}
+// declare global {
+//   interface Window {
+//     ethereum: any;
+//   }
+// }
 
 export default function Component() {
   const { stage, setStage } = useStore();
 
   return (
-    <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
-      <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
-        <div className="flex h-full max-h-screen flex-col gap-4">
-          <div className="flex h-[60px] items-center justify-center w-full">
-            <button
-              onClick={() => {
-                setStage(Stage.UserProfile);
-              }}
-              className={`flex items-center gap-3 font-semibold py-2 px-16 rounded-lg ${
-                stage === Stage.UserProfile ? "bg-gray-200 " : ""
-              }`}
-            >
-              <UserIcon className="h-6 w-6" />
-              <span className="">Profile</span>
-            </button>
-          </div>
-          <div className="flex-1 overflow-auto py-2">
-            <nav className="grid items-start px-4 text-sm font-medium">
+    <>
+      <Navbar />
+      {stage == Stage.HomePage && <Hero />}
+      {stage == Stage.UserProfile && <UserProfile />}
+      {stage == Stage.VouchingProcess && <VouchingProcess />}
+      {stage == Stage.CommunityValidation && <CommunityValidation />}
+      {/* <div className="grid min-h-screen w-full lg:grid-cols-[280px_1fr]">
+        <div className="hidden border-r bg-gray-100/40 lg:block dark:bg-gray-800/40">
+          <div className="flex h-full max-h-screen flex-col gap-4"> */}
+      {/* <div className="flex h-[60px] items-center justify-center w-full">
               <button
                 onClick={() => {
-                  setStage(Stage.SkillVouchRequest);
+                  setStage(Stage.UserProfile);
                 }}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 ${
-                  stage === Stage.SkillVouchRequest ? "bg-gray-200" : ""
+                className={`flex items-center gap-3 font-semibold py-2 px-16 rounded-lg ${
+                  stage === Stage.UserProfile ? "bg-gray-200 " : ""
                 }`}
               >
-                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800">
-                  <span className="text-lg font-bold text-gray-900 dark:text-gray-50">
-                    1
-                  </span>
-                </div>{" "}
-                Skill Vouch Request
+                <UserIcon className="h-6 w-6" />
+                <span className="">Profile</span>
               </button>
-              <button
-                onClick={() => {
-                  setStage(Stage.VouchingProcess);
-                }}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 ${
-                  stage === Stage.VouchingProcess ? "bg-gray-200" : ""
-                }`}
-              >
-                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800">
-                  <span className="text-lg font-bold text-gray-900 dark:text-gray-50">
-                    2
-                  </span>
-                </div>{" "}
-                Vouching Stage
-              </button>
-              <button
-                onClick={() => {
-                  setStage(Stage.CommunityValidation);
-                }}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 ${
-                  stage === Stage.CommunityValidation ? "bg-gray-200" : ""
-                }`}
-              >
-                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800">
-                  <span className="text-lg font-bold text-gray-900 dark:text-gray-50">
-                    3
-                  </span>
-                </div>{" "}
-                Community Validation
-              </button>
-            </nav>
-          </div>
-        </div>
-      </div>
-      {stage === Stage.UserProfile && <UserProfile />}
-      {stage === Stage.SkillVouchRequest && <SkillVouchRequest />}
-      {stage === Stage.VouchingProcess && <VouchingProcess />}
-      {stage === Stage.CommunityValidation && <CommunityValidation />}
-    </div>
+            </div> */}
+      {/* <div className="flex-1 overflow-auto py-2">
+              <nav className="grid items-start px-4 text-sm font-medium">
+                <button
+                  onClick={() => {
+                    setStage(Stage.SkillVouchRequest);
+                  }}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 ${
+                    stage === Stage.SkillVouchRequest ? "bg-gray-200" : ""
+                  }`}
+                >
+                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800">
+                    <span className="text-lg font-bold text-gray-900 dark:text-gray-50">
+                      1
+                    </span>
+                  </div>{" "}
+                  Skill Vouch Request
+                </button>
+                <button
+                  onClick={() => {
+                    setStage(Stage.VouchingProcess);
+                  }}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 ${
+                    stage === Stage.VouchingProcess ? "bg-gray-200" : ""
+                  }`}
+                >
+                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800">
+                    <span className="text-lg font-bold text-gray-900 dark:text-gray-50">
+                      2
+                    </span>
+                  </div>{" "}
+                  Vouching Stage
+                </button>
+                <button
+                  onClick={() => {
+                    setStage(Stage.CommunityValidation);
+                  }}
+                  className={`flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50 ${
+                    stage === Stage.CommunityValidation ? "bg-gray-200" : ""
+                  }`}
+                >
+                  <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 dark:bg-gray-800">
+                    <span className="text-lg font-bold text-gray-900 dark:text-gray-50">
+                      3
+                    </span>
+                  </div>{" "}
+                  Community Validation
+                </button>
+              </nav>
+            </div> */}
+      {/* </div>
+        </div> */}
+      {/* {stage === Stage.UserProfile && <UserProfile />}
+        {stage === Stage.SkillVouchRequest && <SkillVouchRequest />}
+        {stage === Stage.VouchingProcess && <VouchingProcess />}
+        {stage === Stage.CommunityValidation && <CommunityValidation />} */}
+      {/* </div> */}
+    </>
   );
 }
 
