@@ -10,8 +10,11 @@ import {
 } from "../../constants/subgraphQueries";
 import { Client, cacheExchange, fetchExchange } from "@urql/core";
 import { useEffect } from "react";
+import { useAccount } from "wagmi";
 
 const CommunityValidation = () => {
+  const { address } = useAccount();
+
   const APIURL =
     "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.3";
   const {
@@ -24,8 +27,6 @@ const CommunityValidation = () => {
   } = useStore();
 
   const queryData = async () => {
-    const address = await signer.getAddress();
-
     const client = new Client({
       url: APIURL,
       exchanges: [cacheExchange, fetchExchange],

@@ -1,7 +1,8 @@
+import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Client, cacheExchange, fetchExchange } from "@urql/core";
+import { Client as GQL_Client, cacheExchange, fetchExchange } from "@urql/core";
 import { ethers } from "ethers";
 import SkillVouchContract from "../../artifacts/contracts/SkillVouchContract.sol/SkillVouchContract.json";
 import { GET_ACCEPTED, GET_REQ_BY_USER } from "../../constants/subgraphQueries";
@@ -9,7 +10,16 @@ import { Input } from "./ui/input";
 import { Stage, useStore } from "../store/store";
 import { SkillVouchDialog } from "./SkillVouchDialog";
 import { NFTGlareCard } from "./NFTGlareCard";
-
+import {
+  FallbackProvider,
+  JsonRpcProvider,
+  BrowserProvider,
+  JsonRpcSigner,
+} from "ethers";
+import { useMemo } from "react";
+import type { Account, Chain, Client, Transport } from "viem";
+import { type Config, useClient, useConnectorClient, useAccount } from "wagmi";
+import { useEthersProvider, useEthersSigner } from "../lib/ethers";
 interface RequestCreated {
   id: string;
   requestId: string;
@@ -21,14 +31,20 @@ interface RequestCreated {
 }
 
 const UserProfile = () => {
-  // const [linkedInLink, setLinkedInLink] = useState(
-  //   "https://www.linkedin.com/in/johndoe"
-  // );
-  // const [githubLink, setGithubLink] = useState("https://github.com/johndoe");
-  // const [iconPrompt, setIconPrompt] = useState("User");
+  const { address } = useAccount();
 
-  const APIURL =
-    "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.3";
+  const providerT: ethers.JsonRpcProvider =
+    useEthersProvider() as ethers.JsonRpcProvider;
+  // setProvider(providerT);
+
+  const signerT: ethers.JsonRpcSigner =
+    useEthersSigner() as ethers.JsonRpcSigner;
+
+  const contractT = new ethers.Contract(
+    "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4",
+    SkillVouchContract.abi,
+    signerT
+  );
   const {
     setStage,
     signer,
@@ -39,14 +55,29 @@ const UserProfile = () => {
     setContract,
     setProvider,
     setSigner,
+    contract,
   } = useStore();
+  useEffect(() => {
+    if (contract) return;
+    setContract(contractT);
+  });
+
+  console.log(contractT, "contractT");
+  console.log(signerT, "signerT");
+  console.log(providerT, "providerT");
+  // const [linkedInLink, setLinkedInLink] = useState(
+  //   "https://www.linkedin.com/in/johndoe"
+  // );
+  // const [githubLink, setGithubLink] = useState("https://github.com/johndoe");
+  const [iconPrompt, setIconPrompt] = useState("User");
+
+  const APIURL =
+    "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.3";
 
   const [acceptedReqs, setAcceptedReqs] = useState<RequestCreated[]>([]);
 
   const queryData = async () => {
-    const address = await signer.getAddress();
-
-    const client = new Client({
+    const client = new GQL_Client({
       url: APIURL,
       exchanges: [cacheExchange, fetchExchange],
     });
@@ -63,41 +94,47 @@ const UserProfile = () => {
     return data.data;
   };
 
-  useEffect(() => {
-    const initialize = async () => {
-      if (window.ethereum == null) {
-        // If MetaMask is not installed, we use the default provider,
-        // which is backed by a variety of third-party services (such
-        // as INFURA). They do not have private keys installed,
-        // so they only have read-only access
-        console.log("MetaMask not installed; using read-only defaults");
-        setProvider(ethers.getDefaultProvider());
-      } else {
-        // Connect to the MetaMask EIP-1193 object. This is a standard
-        // protocol that allows Ethers access to make all read-only
-        // requests through MetaMask.
-        const providerT = new ethers.BrowserProvider(window.ethereum);
-        // It also provides an opportunity to request access to write
-        // operations, which will be performed by the private key
-        // that MetaMask manages for the user.
+  // const initialize = () => {
+  //   const providerT: ethers.JsonRpcProvider =
+  //     getEthersProvider() as ethers.JsonRpcProvider;
+  //   // setProvider(providerT);
 
-        // "0x966efc9A9247116398441d87085637400A596C3F",
-        const signerT = await providerT.getSigner();
-        const contractT = new ethers.Contract(
-          "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4",
-          SkillVouchContract.abi,
-          signerT
-        );
-        setContract(contractT);
-        setSigner(signerT);
-        setProvider(providerT);
+  //   const signerT: ethers.JsonRpcSigner =
+  //     getEthersSigner() as ethers.JsonRpcSigner;
+  //   // const contractT = new ethers.Contract(
+  //   //   "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4",
+  //   //   SkillVouchContract.abi,
+  //   //   signerT
+  //   // );
 
-        await contractT.mintTokensToNewUsers();
-      }
-    };
+  //   // setContract(contractT);
+  //   // setSigner(signerT);
+  //   // setProvider(providerT);
 
-    initialize();
-  }, []);
+  //   // console.log(contractT);
+  //   console.log(signerT);
+  //   console.log(providerT);
+
+  //   // contractT.mintTokensToNewUsers();
+  //   // if (window.ethereum == null) {
+  //   //   // If MetaMask is not installed, we use the default provider,
+  //   //   // which is backed by a variety of third-party services (such
+  //   //   // as INFURA). They do not have private keys installed,
+  //   //   // so they only have read-only access
+  //   //   console.log("MetaMask not installed; using read-only defaults");
+  //   //   setProvider(ethers.getDefaultProvider());
+  //   // } else {
+  //   //   // Connect to the MetaMask EIP-1193 object. This is a standard
+  //   //   // protocol that allows Ethers access to make all read-only
+  //   //   // requests through MetaMask.
+  //   //   const providerT = new ethers.BrowserProvider(window.ethereum);
+  //   //   // It also provides an opportunity to request access to write
+  //   //   // operations, which will be performed by the private key
+  //   //   // that MetaMask manages for the user.
+
+  //   //   // "0x966efc9A9247116398441d87085637400A596C3F",
+  //   // }
+  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -111,7 +148,7 @@ const UserProfile = () => {
       console.log(requestData);
       console.log(requestIdArray);
 
-      const client = new Client({
+      const client = new GQL_Client({
         url: APIURL,
         exchanges: [cacheExchange, fetchExchange],
       });
@@ -185,6 +222,7 @@ const UserProfile = () => {
   return (
     <div className="flex flex-col items-center">
       <main className="flex justify-center items-center p-10 m-8">
+        {/* Build lamps <br /> the right way */}
         <NFTGlareCard />
 
         {/* <div className="grid gap-2">

@@ -118,7 +118,7 @@ export function NFTGlareCard() {
         stakeAmount: "1200",
       },
     ]);
-  });
+  }, []);
   return (
     // < className="w-[420px] [aspect-ratio:15/21] bg-white dark:bg-zinc-900">
     <GlareCard className="flex flex-col max-w-7xl items-center justify-between py-10">

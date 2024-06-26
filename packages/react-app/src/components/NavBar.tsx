@@ -192,26 +192,30 @@ export const Navbar = () => {
             <div className="hidden md:flex gap-2">
               {(() => {
                 if (status === "disconnected") {
+                  console.log(status);
                   return <ConnectAccount />;
                 }
-                return (
-                  <div>
-                    <Identity
-                      address={address!}
-                      schemaId="0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9"
-                      className="flex items-center gap-2"
-                    >
-                      <Avatar className="bg-slate-400 size-9" />
-                      {/* <Badge /> */}
-                      {/* <Name /> */}
-                      <Address />
-                    </Identity>
 
-                    {/* <button type="button" onClick={() => disconnect()}> */}
-                    {/* <Avatar address={address} /> */}
-                    {/* </button> */}
-                  </div>
-                );
+                if (address) {
+                  return (
+                    <div>
+                      <Identity
+                        address={address}
+                        schemaId="0xf8b05c79f090979bf4a80270aba232dff11a10d9ca55c4f88de95317970f0de9"
+                        className="flex items-center gap-2"
+                      >
+                        <Avatar className="bg-slate-400 size-9" />
+                        <Badge />
+                        {/* <Name /> */}
+                        <Address />
+                      </Identity>
+
+                      {/* <button type="button" onClick={() => disconnect()}> */}
+                      {/* <Avatar address={address} /> */}
+                      {/* </button> */}
+                    </div>
+                  );
+                }
               })()}
             </div>
             <div className="py-2">

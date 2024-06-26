@@ -14,8 +14,10 @@ import {
   GET_VOTES,
 } from "../../constants/subgraphQueries";
 import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
 
 const VouchingProcess = () => {
+  const { address } = useAccount();
   const APIURL =
     "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.3";
 
@@ -33,8 +35,6 @@ const VouchingProcess = () => {
   } = useStore();
 
   const queryData = async () => {
-    const address = await signer.getAddress();
-
     const client = new Client({
       url: APIURL,
       exchanges: [cacheExchange, fetchExchange],
