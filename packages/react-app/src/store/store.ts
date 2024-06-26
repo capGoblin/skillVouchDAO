@@ -45,6 +45,8 @@ interface State {
   setLinkedInLink: (value: string) => void;
   githubLink: string;
   setGithubLink: (value: string) => void;
+  triggeredToast: boolean;
+  setTriggeredToast: (value: boolean) => void;
 }
 
 export const useStore = create<State>((set) => ({
@@ -66,4 +68,6 @@ export const useStore = create<State>((set) => ({
   setLinkedInLink: (value: string) => set(() => ({ linkedInLink: value })),
   githubLink: "",
   setGithubLink: (value: string) => set(() => ({ githubLink: value })),
+  triggeredToast: false,
+  setTriggeredToast: (value: boolean) => set(() => ({ triggeredToast: value })),
 }));

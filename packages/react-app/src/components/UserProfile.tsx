@@ -1,13 +1,20 @@
 import { Client as GQL_Client, cacheExchange, fetchExchange } from "@urql/core";
 import { ethers } from "ethers";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAccount } from "wagmi";
 import SkillVouchContract from "../../artifacts/contracts/SkillVouchContract.sol/SkillVouchContract.json";
+import SkillVouchNFT from "../../artifacts/contracts/SkillVouchNFT.sol/SkillVouchNFT.json";
 import { GET_ACCEPTED, GET_REQ_BY_USER } from "../../constants/subgraphQueries";
 import { useEthersProvider, useEthersSigner } from "../lib/ethers";
 import { useStore } from "../store/store";
 import { NFTGlareCard } from "./NFTGlareCard";
 import { SkillVouchDialog } from "./SkillVouchDialog";
+import html2canvas from "html2canvas";
+import { pinFileToIPFS, uploadJSONToIPFS } from "../lib/uploadToIPFS";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+
 interface RequestCreated {
   id: string;
   requestId: string;
@@ -19,9 +26,15 @@ interface RequestCreated {
   gitHubLink: string;
   linkedInLink: string;
 }
+interface PinataReturns {
+  success: boolean;
+  data: string;
+}
 
 const UserProfile = () => {
   const { address } = useAccount();
+  const componentRef = useRef<HTMLDivElement | null>(null);
+  const { toast } = useToast();
 
   const providerT: ethers.JsonRpcProvider =
     useEthersProvider() as ethers.JsonRpcProvider;
@@ -35,7 +48,14 @@ const UserProfile = () => {
     SkillVouchContract.abi,
     signerT
   );
-  const { setLinkedInLink, setGithubLink, setContract, contract } = useStore();
+  const {
+    setLinkedInLink,
+    setGithubLink,
+    setContract,
+    contract,
+    triggeredToast,
+    setTriggeredToast,
+  } = useStore();
   useEffect(() => {
     if (contract) {
       return;
@@ -56,6 +76,7 @@ const UserProfile = () => {
     "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.4";
 
   const [acceptedReqs, setAcceptedReqs] = useState<RequestCreated[]>([]);
+  const [metadataURL, setMetadataURL] = useState<string>("");
 
   const queryData = async () => {
     const client = new GQL_Client({
@@ -152,6 +173,38 @@ const UserProfile = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (acceptedReqs.length === 0 && !triggeredToast && metadataURL) return;
+    toast({
+      title: "SkillVouch Verified NFT.",
+      description: "Mint your SkillVouch NFT on the Zora Network.",
+      action: (
+        <ToastAction altText="MINT 🔥" onClick={handleCapture}>
+          Mint it! 🔥
+        </ToastAction>
+      ),
+    });
+
+    setTriggeredToast(true);
+  }, [acceptedReqs]);
+
+  useEffect(() => {
+    if (metadataURL === "") return;
+
+    toast({
+      title: "Your SkillVouch NFT Minted!.",
+      description: "Checkout your SkillVouch NFT's Metadata.",
+      action: (
+        <ToastAction
+          altText="checkout"
+          onClick={() => window.open(metadataURL, "_blank")}
+        >
+          Check Out
+        </ToastAction>
+      ),
+    });
+  }, []);
+
   const saveChanges = async (
     skills: string,
     POW: string,
@@ -200,12 +253,75 @@ const UserProfile = () => {
     // setFetch(true);
   };
 
+  const base64ToBlob = (base64: string): Blob => {
+    const byteString = atob(base64.split(",")[1]);
+    const mimeString = base64.split(",")[0].split(":")[1].split(";")[0];
+    const ab = new ArrayBuffer(byteString.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: mimeString });
+  };
+
+  const blobToFile = (blob: Blob, fileName: string): File => {
+    return new File([blob], fileName, { type: blob.type });
+  };
+
+  const captureComponent = async () => {
+    const element = componentRef.current;
+    const canvas = await html2canvas(element!);
+    const dataUrl = canvas.toDataURL("image/png");
+    console.log(dataUrl); // This is your captured image URL
+    return dataUrl;
+  };
+
+  const handleCapture = async () => {
+    const imageUrl = await captureComponent();
+    const blob = base64ToBlob(imageUrl);
+    const file = blobToFile(blob, "image.png");
+    const arr: string[] = [];
+    acceptedReqs.map((req, index) =>
+      req.skill
+        .split(",")
+        .map((skill: string) => skill.trim())
+        .map((skill: string) => arr.push(skill))
+    );
+
+    const response = await pinFileToIPFS(file);
+
+    const jsonData = {
+      name: "SkillVouch NFT",
+      description: "NFT representing validated skills on SkillVouchDAO",
+      attributes: {
+        skills: arr,
+      },
+      img: response,
+    };
+    const res: PinataReturns = await uploadJSONToIPFS(jsonData);
+    console.log(response, "IMG");
+    console.log(res.data, "JSON");
+
+    const contract = new ethers.Contract(
+      "0x5cA8800bBF39F388b8Aa0aaf287E6F700d666414",
+      SkillVouchNFT.abi,
+      signerT
+    );
+    await contract.safeMint(address, res.data);
+
+    setMetadataURL(res.data);
+
+    // Upload imageUrl to IPFS and mint NFT here
+  };
+
   return (
     <div className="flex flex-col items-center">
+      <Toaster />
       <main className="flex justify-center items-center p-10 m-8">
         {/* Build lamps <br /> the right way */}
-        <NFTGlareCard acceptedReqs={acceptedReqs} />
-
+        <div ref={componentRef}>
+          <NFTGlareCard acceptedReqs={acceptedReqs} />
+        </div>
         {/* <div className="grid gap-2">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold">Experience</h2>
@@ -273,6 +389,7 @@ const UserProfile = () => {
               </div>
             </div> */}
       </main>
+
       <div className="flex justify-center">
         <SkillVouchDialog saveChanges={saveChanges} />
       </div>

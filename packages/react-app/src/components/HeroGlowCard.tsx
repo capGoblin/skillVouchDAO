@@ -16,7 +16,7 @@ import { Input } from "./ui/input";
 // }
 
 export function HeroGlareCard() {
-  const [name, setName] = useState("John Doe");
+  const [name, setName] = useState("John.ens");
   const [title, setTitle] = useState("Software Engineer");
 
   const [showLinkedinInput, setShowLinkedinInput] = useState(false);
@@ -52,7 +52,7 @@ export function HeroGlareCard() {
     {
       id: "1",
       requestId: "req-001",
-      user: "John Doe",
+      user: "John.ens",
       skill: "React",
       experience: "5 years",
       project: "Project Alpha",
@@ -79,7 +79,7 @@ export function HeroGlareCard() {
     {
       id: "1",
       requestId: "req-001",
-      user: "John Doe",
+      user: "John.ens",
       skill: "Viem",
       experience: "5 years",
       project: "Project Alpha",
