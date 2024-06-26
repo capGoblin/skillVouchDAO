@@ -58,7 +58,9 @@ const UserProfile = () => {
     contract,
   } = useStore();
   useEffect(() => {
-    if (contract) return;
+    if (contract) {
+      return;
+    }
     setContract(contractT);
   });
 
@@ -184,24 +186,24 @@ const UserProfile = () => {
 
     // const stakeAmountWei = ethers.parseEther(stakeAmount); // Convert to Wei
 
-    // if (selectedPOW == "Experience")
-    //   await contract.createRequest(
-    //     skills,
-    //     "",
-    //     POW,
-    //     Number(stakeAmount),
-    //     linkedin,
-    //     github
-    //   );
-    // else
-    //   await contract.createRequest(
-    //     skills,
-    //     POW,
-    //     "",
-    //     Number(stakeAmount),
-    //     linkedin,
-    //     github
-    //   );
+    if (selectedPOW == "Experience")
+      await contractT.createRequest(
+        skills,
+        "",
+        POW,
+        Number(stakeAmount),
+        linkedin,
+        github
+      );
+    else
+      await contractT.createRequest(
+        skills,
+        POW,
+        "",
+        Number(stakeAmount),
+        linkedin,
+        github
+      );
 
     // setStageOneInputs([
     //   ...stageOneInputs,

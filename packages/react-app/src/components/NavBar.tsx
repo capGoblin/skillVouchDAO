@@ -10,7 +10,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Stage, useStore } from "../store/store";
 import { Menu } from "lucide-react";
 // import { useStore } from "../store/store";
@@ -29,12 +29,34 @@ import {
   Badge,
   Address,
 } from "@coinbase/onchainkit/identity";
+import { ethers } from "ethers";
+import { useEthersSigner } from "../lib/ethers";
+import SkillVouchContract from "../../artifacts/contracts/SkillVouchContract.sol/SkillVouchContract.json";
 
 export const Navbar = () => {
+  const signer: ethers.JsonRpcSigner =
+    useEthersSigner() as ethers.JsonRpcSigner;
+
+  const contract = new ethers.Contract(
+    "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4",
+    SkillVouchContract.abi,
+    signer
+  );
+  const { disconnect } = useDisconnect();
+
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const { setStage } = useStore();
   const { address, status } = useAccount();
-  const { disconnect } = useDisconnect();
+
+  useEffect(() => {
+    if (status != "connected") return;
+    const mintTokens = async () => {
+      await contract.mintTokensToNewUsers();
+    };
+
+    mintTokens();
+  }, [status]);
+
   return (
     <header className="sticky border-b-[1px] top-0 z-40 w-full bg-white dark:border-b-slate-700 dark:bg-background">
       <NavigationMenu className="mx-auto">
@@ -209,7 +231,6 @@ export const Navbar = () => {
                         {/* <Name /> */}
                         <Address />
                       </Identity>
-
                       {/* <button type="button" onClick={() => disconnect()}> */}
                       {/* <Avatar address={address} /> */}
                       {/* </button> */}
