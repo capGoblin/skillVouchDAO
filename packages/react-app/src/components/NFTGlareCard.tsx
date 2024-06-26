@@ -33,7 +33,7 @@ export function NFTGlareCard({ acceptedReqs }: NFTGlareCardProps) {
   const { setLinkedInLink, setGithubLink, githubLink, linkedInLink } =
     useStore();
   const [selectedImage, setSelectedImage] = useState(
-    "../../public/default-avatar-profile-icon-social-600nw-1677509740.webp"
+    "/default-avatar-profile-icon-social-600nw-1677509740.webp"
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
   // const [acceptedReqs, setAcceptedReqs] = useState<RequestCreated[]>([]);

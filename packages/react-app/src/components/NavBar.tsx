@@ -206,7 +206,11 @@ export const Navbar = () => {
               {(() => {
                 if (status === "disconnected") {
                   console.log(status);
-                  return <ConnectAccount />;
+                  return (
+                    <div className="mt-2">
+                      <ConnectAccount />
+                    </div>
+                  );
                 }
 
                 if (address) {
