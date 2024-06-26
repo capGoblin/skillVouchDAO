@@ -4,9 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "@openzeppelin/contracts": "^5.0.2",
-    "@poanet/solidity-flattener": "^3.0.9",
-    "yarn": "^1.22.22"
+    "@openzeppelin/contracts": "^5.0.2"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.7",

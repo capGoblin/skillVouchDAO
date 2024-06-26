@@ -1,15 +1,12 @@
-import "./App.css";
-import HomePage from "./components/HomePage";
-import { WagmiProvider, createConfig, http } from "wagmi";
-import { baseSepolia } from "wagmi/chains";
-import { coinbaseWallet } from "wagmi/connectors";
 import { OnchainKitProvider } from "@coinbase/onchainkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { base } from "viem/chains";
+import { WagmiProvider } from "wagmi";
 import { wagmiConfig } from "../src/lib/wagmi";
-import { ReactNode } from "react";
+import "./App.css";
+import HomePage from "./components/HomePage";
 
-type Props = { children: ReactNode };
+// type Props = { children: ReactNode };
 
 // const wagmiConfig = createConfig({
 //   chains: [baseSepolia],
