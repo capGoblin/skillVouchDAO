@@ -48,6 +48,13 @@ const UserProfile = () => {
     SkillVouchContract.abi,
     signerT
   );
+
+  const contractNFT = new ethers.Contract(
+    "0xe8B56B64b258Ac548c2FfBD8fD7cBbBa7f500436",
+    SkillVouchNFT.abi,
+    signerT
+  );
+
   const {
     setLinkedInLink,
     setGithubLink,
@@ -174,7 +181,7 @@ const UserProfile = () => {
   }, []);
 
   useEffect(() => {
-    if (acceptedReqs.length === 0 && !triggeredToast && metadataURL) return;
+    if (acceptedReqs.length === 0 && !triggeredToast && !metadataURL) return;
     toast({
       title: "SkillVouch Verified NFT.",
       description: "Mint your SkillVouch NFT on the Zora Network.",
@@ -203,7 +210,7 @@ const UserProfile = () => {
         </ToastAction>
       ),
     });
-  }, []);
+  }, [metadataURL]);
 
   const saveChanges = async (
     skills: string,
@@ -302,12 +309,8 @@ const UserProfile = () => {
     console.log(response, "IMG");
     console.log(res.data, "JSON");
 
-    const contract = new ethers.Contract(
-      "0x5cA8800bBF39F388b8Aa0aaf287E6F700d666414",
-      SkillVouchNFT.abi,
-      signerT
-    );
-    await contract.safeMint(address, res.data);
+    console.log(address, "ADDRS");
+    await contractNFT.safeMint(res.data);
 
     setMetadataURL(res.data);
 

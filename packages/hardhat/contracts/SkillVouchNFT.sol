@@ -13,11 +13,11 @@ contract SkillVouchNFT is ERC721, ERC721URIStorage, ERC721Burnable {
 
     constructor() ERC721("SkillVouchNFT", "SVT") {}
 
-    function safeMint(address to, string memory uri) public {
-        _tokenId = _tokenId++;
-        _safeMint(to, _tokenId);
+    function safeMint(string memory uri) external payable {
+        _tokenId = _tokenId + 1;
+        _safeMint(msg.sender, _tokenId);
 
-        userToTokenId[to] = _tokenId;
+        userToTokenId[msg.sender] = _tokenId;
         tokenIdToURI[_tokenId] = uri;
     }
 
