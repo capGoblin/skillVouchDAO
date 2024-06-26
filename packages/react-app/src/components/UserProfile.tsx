@@ -1,19 +1,19 @@
+import { ToastAction } from "@/components/ui/toast";
+import { Toaster } from "@/components/ui/toaster";
+import { useToast } from "@/components/ui/use-toast";
 import { Client as GQL_Client, cacheExchange, fetchExchange } from "@urql/core";
 import { ethers } from "ethers";
-import { useEffect, useState, useRef } from "react";
+import html2canvas from "html2canvas";
+import { useEffect, useRef, useState } from "react";
 import { useAccount } from "wagmi";
 import SkillVouchContract from "../../artifacts/contracts/SkillVouchContract.sol/SkillVouchContract.json";
 import SkillVouchNFT from "../../artifacts/contracts/SkillVouchNFT.sol/SkillVouchNFT.json";
 import { GET_ACCEPTED, GET_REQ_BY_USER } from "../../constants/subgraphQueries";
 import { useEthersProvider, useEthersSigner } from "../lib/ethers";
+import { pinFileToIPFS, uploadJSONToIPFS } from "../lib/uploadToIPFS";
 import { useStore } from "../store/store";
 import { NFTGlareCard } from "./NFTGlareCard";
 import { SkillVouchDialog } from "./SkillVouchDialog";
-import html2canvas from "html2canvas";
-import { pinFileToIPFS, uploadJSONToIPFS } from "../lib/uploadToIPFS";
-import { ToastAction } from "@/components/ui/toast";
-import { useToast } from "@/components/ui/use-toast";
-import { Toaster } from "@/components/ui/toaster";
 
 interface RequestCreated {
   id: string;
@@ -288,7 +288,7 @@ const UserProfile = () => {
     const blob = base64ToBlob(imageUrl);
     const file = blobToFile(blob, "image.png");
     const arr: string[] = [];
-    acceptedReqs.map((req, index) =>
+    acceptedReqs.map((req) =>
       req.skill
         .split(",")
         .map((skill: string) => skill.trim())
