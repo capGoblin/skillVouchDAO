@@ -41,8 +41,6 @@ const VouchingProcess = () => {
     setStageTwoInputs,
     stageThreeInputs,
     setStageThreeInputs,
-    linkedInLink,
-    githubLink,
   } = useStore();
 
   const queryData = async () => {

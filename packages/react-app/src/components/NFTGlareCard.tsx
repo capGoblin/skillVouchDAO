@@ -1,10 +1,9 @@
-import { GlareCard } from "./ui/glare-card";
-import { BackgroundGradient } from "./ui/background-gradient";
-import { Input } from "./ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useEffect, useRef, useState } from "react";
-import { Stage, useStore } from "../store/store";
+import { useRef, useState } from "react";
+import { useStore } from "../store/store";
+import { GlareCard } from "./ui/glare-card";
+import { Input } from "./ui/input";
 
 interface RequestCreated {
   id: string;
@@ -31,17 +30,8 @@ export function NFTGlareCard({ acceptedReqs }: NFTGlareCardProps) {
   const [showNameInput, setShowNameInput] = useState(false);
   const [showTitleInput, setShowTitleInput] = useState(false);
 
-  const {
-    setStage,
-    signer,
-    setLinkedInLink,
-    setGithubLink,
-    githubLink,
-    linkedInLink,
-    setContract,
-    setProvider,
-    setSigner,
-  } = useStore();
+  const { setLinkedInLink, setGithubLink, githubLink, linkedInLink } =
+    useStore();
   const [selectedImage, setSelectedImage] = useState(
     "../../public/default-avatar-profile-icon-social-600nw-1677509740.webp"
   );
@@ -327,25 +317,25 @@ function CheckIcon(props: any) {
   );
 }
 
-function PlusIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M5 12h14" />
-      <path d="M12 5v14" />
-    </svg>
-  );
-}
+// function PlusIcon(props: any) {
+//   return (
+//     <svg
+//       {...props}
+//       xmlns="http://www.w3.org/2000/svg"
+//       width="24"
+//       height="24"
+//       viewBox="0 0 24 24"
+//       fill="none"
+//       stroke="currentColor"
+//       strokeWidth="2"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     >
+//       <path d="M5 12h14" />
+//       <path d="M12 5v14" />
+//     </svg>
+//   );
+// }
 
 function GithubIcon(props: any) {
   return (

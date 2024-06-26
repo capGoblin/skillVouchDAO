@@ -10,13 +10,8 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa6";
+import { useState } from "react";
 import { ExperienceOrProjectDropdown } from "./ExperienceOrProjectDropdown";
-import { useStore } from "../store/store";
-import SkillVouchContract from "../../artifacts/contracts/SkillVouchContract.sol/SkillVouchContract.json";
-import { useEthersProvider, useEthersSigner } from "../lib/ethers";
-import { ethers } from "ethers";
 
 interface SkillVouchDialogProps {
   saveChanges: (
@@ -30,13 +25,13 @@ interface SkillVouchDialogProps {
 }
 
 export function SkillVouchDialog({ saveChanges }: SkillVouchDialogProps) {
-  const signerT: ethers.JsonRpcSigner =
-    useEthersSigner() as ethers.JsonRpcSigner;
-  const contractT = new ethers.Contract(
-    "0x4ffFa4B9Ac841BEf20910caE3d2F52A9D85F4314",
-    SkillVouchContract.abi,
-    signerT
-  );
+  // const signerT: ethers.JsonRpcSigner =
+  //   useEthersSigner() as ethers.JsonRpcSigner;
+  // const contractT = new ethers.Contract(
+  //   "0x4ffFa4B9Ac841BEf20910caE3d2F52A9D85F4314",
+  //   SkillVouchContract.abi,
+  //   signerT
+  // );
 
   const [selectedOption, setSelectedOption] = useState<string>("Experience");
   const [skills, setSkills] = useState("");

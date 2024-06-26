@@ -1,12 +1,10 @@
-import React, { useState } from "react";
-import { HeroGlareCard } from "./HeroGlowCard";
-import { Button, buttonVariants } from "./ui/button";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
-import { BackgroundGradient } from "./ui/background-gradient";
-import { useStore, Stage } from "../store/store";
+import { Stage, useStore } from "../store/store";
+import { HeroGlareCard } from "./HeroGlowCard";
+import { buttonVariants } from "./ui/button";
 
 const Hero = () => {
-  const { setStage, stage } = useStore();
+  const { setStage } = useStore();
   return (
     <div className="">
       <section className="grid place-items-center bg-black">

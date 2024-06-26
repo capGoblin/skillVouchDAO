@@ -3,16 +3,8 @@ import {
   NavigationMenuItem,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Stage, useStore } from "../store/store";
-import { Menu } from "lucide-react";
 // import { useStore } from "../store/store";
 // import ConnectButton from "./ConnectButton";
 import { LogoIcon } from "./Icons";
@@ -20,18 +12,17 @@ import { LogoIcon } from "./Icons";
 import { ModeToggle } from "./mode-toggle";
 import { buttonVariants } from "./ui/button";
 
-import { ConnectAccount } from "@coinbase/onchainkit/wallet";
-import { useAccount, useDisconnect } from "wagmi";
 import {
-  Avatar,
-  Identity,
-  Name,
-  Badge,
   Address,
+  Avatar,
+  Badge,
+  Identity,
 } from "@coinbase/onchainkit/identity";
+import { ConnectAccount } from "@coinbase/onchainkit/wallet";
 import { ethers } from "ethers";
-import { useEthersSigner } from "../lib/ethers";
+import { useAccount } from "wagmi";
 import SkillVouchContract from "../../artifacts/contracts/SkillVouchContract.sol/SkillVouchContract.json";
+import { useEthersSigner } from "../lib/ethers";
 
 export const Navbar = () => {
   const signer: ethers.JsonRpcSigner =
@@ -42,9 +33,9 @@ export const Navbar = () => {
     SkillVouchContract.abi,
     signer
   );
-  const { disconnect } = useDisconnect();
+  // const { disconnect } = useDisconnect();
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  // const [isOpen, setIsOpen] = useState<boolean>(false);
   const { setStage } = useStore();
   const { address, status } = useAccount();
 

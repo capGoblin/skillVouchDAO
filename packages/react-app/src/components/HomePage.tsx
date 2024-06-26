@@ -1,9 +1,8 @@
+import { Stage, useStore } from "../store/store";
 import CommunityValidation from "./CommunityValidation";
 import Hero from "./Hero";
 import { Navbar } from "./NavBar";
-import SkillVouchRequest from "./SkillVouchRequest";
 import UserProfile from "./UserProfile";
-import { Stage, useStore } from "../store/store";
 
 import VouchingProcess from "./VouchingProcess";
 interface BaseProfile {
@@ -13,8 +12,6 @@ interface BaseProfile {
   linkedin: string;
   github: string;
 }
-
-interface SkillVouchRequest extends BaseProfile {}
 
 interface VouchingProcess extends BaseProfile {
   NoOfVouched: number;
@@ -31,7 +28,7 @@ interface CommunityValidation extends VouchingProcess {
 // }
 
 export default function Component() {
-  const { stage, setStage } = useStore();
+  const { stage } = useStore();
 
   return (
     <>
@@ -116,22 +113,22 @@ export default function Component() {
   );
 }
 
-function UserIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
-    </svg>
-  );
-}
+// function UserIcon(props: any) {
+//   return (
+//     <svg
+//       {...props}
+//       xmlns="http://www.w3.org/2000/svg"
+//       width="24"
+//       height="24"
+//       viewBox="0 0 24 24"
+//       fill="none"
+//       stroke="currentColor"
+//       strokeWidth="2"
+//       strokeLinecap="round"
+//       strokeLinejoin="round"
+//     >
+//       <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+//       <circle cx="12" cy="7" r="4" />
+//     </svg>
+//   );
+// }
