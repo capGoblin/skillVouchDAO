@@ -14,9 +14,15 @@ interface RequestCreated {
   experience: string;
   project: string;
   stakeAmount: string;
+  gitHubLink: string;
+  linkedInLink: string;
 }
 
-export function NFTGlareCard() {
+type NFTGlareCardProps = {
+  acceptedReqs: RequestCreated[];
+};
+
+export function NFTGlareCard({ acceptedReqs }: NFTGlareCardProps) {
   const [name, setName] = useState("John Doe");
   const [title, setTitle] = useState("Software Engineer");
 
@@ -40,7 +46,7 @@ export function NFTGlareCard() {
     "../../public/default-avatar-profile-icon-social-600nw-1677509740.webp"
   );
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [acceptedReqs, setAcceptedReqs] = useState<RequestCreated[]>([]);
+  // const [acceptedReqs, setAcceptedReqs] = useState<RequestCreated[]>([]);
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
     if (file) {
@@ -60,65 +66,66 @@ export function NFTGlareCard() {
 
   // Calculate if the number of items is odd
   const isOdd = acceptedReqs.length % 2 !== 0;
+  console.log(acceptedReqs);
 
-  useEffect(() => {
-    setAcceptedReqs([
-      {
-        id: "1",
-        requestId: "req-001",
-        user: "John Doe",
-        skill: "REACT",
-        experience: "5 years",
-        project: "Project Alpha",
-        stakeAmount: "1000",
-      },
-      {
-        id: "2",
-        requestId: "req-002",
-        user: "Jane Smith",
-        skill: "NODE",
-        experience: "3 years",
-        project: "Project Beta",
-        stakeAmount: "1500",
-      },
-      {
-        id: "3",
-        requestId: "req-003",
-        user: "Mike Johnson",
-        skill: "ANGULAR",
-        experience: "2 years",
-        project: "Project Gamma",
-        stakeAmount: "1200",
-      },
-      {
-        id: "1",
-        requestId: "req-001",
-        user: "John Doe",
-        skill: "NEST",
-        experience: "5 years",
-        project: "Project Alpha",
-        stakeAmount: "1000",
-      },
-      {
-        id: "2",
-        requestId: "req-002",
-        user: "Jane Smith",
-        skill: "trUFFLE",
-        experience: "3 years",
-        project: "Project Beta",
-        stakeAmount: "1500",
-      },
-      {
-        id: "3",
-        requestId: "req-003",
-        user: "Mike Johnson",
-        skill: "GANACHE",
-        experience: "2 years",
-        project: "Project Gamma",
-        stakeAmount: "1200",
-      },
-    ]);
-  }, []);
+  // useEffect(() => {
+  //   setAcceptedReqs([
+  //     {
+  //       id: "1",
+  //       requestId: "req-001",
+  //       user: "John Doe",
+  //       skill: "REACT",
+  //       experience: "5 years",
+  //       project: "Project Alpha",
+  //       stakeAmount: "1000",
+  //     },
+  //     {
+  //       id: "2",
+  //       requestId: "req-002",
+  //       user: "Jane Smith",
+  //       skill: "NODE",
+  //       experience: "3 years",
+  //       project: "Project Beta",
+  //       stakeAmount: "1500",
+  //     },
+  //     {
+  //       id: "3",
+  //       requestId: "req-003",
+  //       user: "Mike Johnson",
+  //       skill: "ANGULAR",
+  //       experience: "2 years",
+  //       project: "Project Gamma",
+  //       stakeAmount: "1200",
+  //     },
+  //     {
+  //       id: "1",
+  //       requestId: "req-001",
+  //       user: "John Doe",
+  //       skill: "NEST",
+  //       experience: "5 years",
+  //       project: "Project Alpha",
+  //       stakeAmount: "1000",
+  //     },
+  //     {
+  //       id: "2",
+  //       requestId: "req-002",
+  //       user: "Jane Smith",
+  //       skill: "trUFFLE",
+  //       experience: "3 years",
+  //       project: "Project Beta",
+  //       stakeAmount: "1500",
+  //     },
+  //     {
+  //       id: "3",
+  //       requestId: "req-003",
+  //       user: "Mike Johnson",
+  //       skill: "GANACHE",
+  //       experience: "2 years",
+  //       project: "Project Gamma",
+  //       stakeAmount: "1200",
+  //     },
+  //   ]);
+  // }, []);
   return (
     // < className="w-[420px] [aspect-ratio:15/21] bg-white dark:bg-zinc-900">
     <GlareCard className="flex flex-col max-w-7xl items-center justify-between py-10">
@@ -213,7 +220,7 @@ export function NFTGlareCard() {
           </div>
         ) : (
           <a
-            href={linkedInLink}
+            href={acceptedReqs[0] ? acceptedReqs[0].linkedInLink : ""}
             target="_blank"
             className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
             onClick={() => setShowLinkedinInput(true)}
@@ -226,7 +233,7 @@ export function NFTGlareCard() {
           <div className="flex items-center gap-2">
             <Input
               type="text"
-              value={githubLink}
+              value={acceptedReqs[0] ? acceptedReqs[0].gitHubLink : ""}
               onChange={(e) => setGithubLink(e.target.value)}
               className="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
             />

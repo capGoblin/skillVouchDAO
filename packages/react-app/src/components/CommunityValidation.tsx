@@ -11,20 +11,25 @@ import {
 import { Client, cacheExchange, fetchExchange } from "@urql/core";
 import { useEffect } from "react";
 import { useAccount } from "wagmi";
+import { ethers } from "ethers";
+import { useEthersSigner } from "../lib/ethers";
+import SkillVouchContract from "../../artifacts/contracts/SkillVouchContract.sol/SkillVouchContract.json";
 
 const CommunityValidation = () => {
   const { address } = useAccount();
 
+  const signer: ethers.JsonRpcSigner =
+    useEthersSigner() as ethers.JsonRpcSigner;
+
+  const contract = new ethers.Contract(
+    "0x4ffFa4B9Ac841BEf20910caE3d2F52A9D85F4314",
+    SkillVouchContract.abi,
+    signer
+  );
+
   const APIURL =
-    "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.3";
-  const {
-    stageThreeInputs,
-    setStageThreeInputs,
-    contract,
-    signer,
-    linkedInLink,
-    githubLink,
-  } = useStore();
+    "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.4";
+  const { stageThreeInputs, setStageThreeInputs } = useStore();
 
   const queryData = async () => {
     const client = new Client({
@@ -182,14 +187,14 @@ const CommunityValidation = () => {
                 </div>
                 <div className="flex items-center gap-2 mb-4">
                   <a
-                    href={linkedInLink}
+                    href={input.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <LinkedinIcon className="h-6 w-6" />
                   </a>
                   <a
-                    href={githubLink}
+                    href={input.github}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -197,6 +202,16 @@ const CommunityValidation = () => {
                   </a>
                 </div>
               </CardContent>
+              {(input.NoOfNoVotes || input.NoOfYesVotes) && (
+                <div className="flex justify-evenly space-x-12 mb-4 mr-5">
+                  <div className="w-1/2 mx-5 font-medium text-green-600 flex justify-center">
+                    {input.NoOfYesVotes}
+                  </div>
+                  <div className="w-1/2 mx-5 font-medium text-red-800 flex justify-center">
+                    {input.NoOfNoVotes}
+                  </div>
+                </div>
+              )}
               <div className="flex justify-evenly space-x-12 mb-8 mr-5">
                 <Button
                   className="w-1/2 mx-5 bg-green-600"

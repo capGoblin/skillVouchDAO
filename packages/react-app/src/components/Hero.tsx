@@ -3,8 +3,10 @@ import { HeroGlareCard } from "./HeroGlowCard";
 import { Button, buttonVariants } from "./ui/button";
 import { GitHubLogoIcon } from "@radix-ui/react-icons";
 import { BackgroundGradient } from "./ui/background-gradient";
+import { useStore, Stage } from "../store/store";
 
 const Hero = () => {
+  const { setStage, stage } = useStore();
   return (
     <div className="">
       <section className="grid place-items-center bg-black">
@@ -37,12 +39,15 @@ const Hero = () => {
                 >
                   Get Started
                 </Button> */}
-                <button className="inline-flex h-14 w-44 animate-shimmer items-center justify-center font-bold text-gray-300 rounded-md border  border-gray-500 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50">
+                <button
+                  className="inline-flex h-14 w-44 animate-shimmer items-center justify-center font-bold text-gray-300 rounded-md border  border-gray-500 bg-[linear-gradient(110deg,#000103,45%,#1e2631,55%,#000103)] bg-[length:200%_100%] px-6 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
+                  onClick={() => setStage(Stage.UserProfile)}
+                >
                   Get Started
                 </button>
                 <a
                   rel="noreferrer noopener"
-                  href="https://github.com/capGoblin/Xchange"
+                  href="https://github.com/capGoblin/skillVouchDAO"
                   target="_blank"
                   className={`md:w-1/3 h-14 w-48 font-medium ${buttonVariants({
                     variant: "outline",

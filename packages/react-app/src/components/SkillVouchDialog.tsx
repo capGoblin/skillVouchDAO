@@ -33,7 +33,7 @@ export function SkillVouchDialog({ saveChanges }: SkillVouchDialogProps) {
   const signerT: ethers.JsonRpcSigner =
     useEthersSigner() as ethers.JsonRpcSigner;
   const contractT = new ethers.Contract(
-    "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4",
+    "0x4ffFa4B9Ac841BEf20910caE3d2F52A9D85F4314",
     SkillVouchContract.abi,
     signerT
   );

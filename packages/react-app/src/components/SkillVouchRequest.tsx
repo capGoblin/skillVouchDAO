@@ -7,7 +7,7 @@ import { SkillVouchDialog } from "./SkillVouchDialog";
 
 const SkillVouchRequest = () => {
   const APIURL =
-    "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.3";
+    "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.4";
   const [fetch, setFetch] = useState(false);
   const {
     stageOneInputs,

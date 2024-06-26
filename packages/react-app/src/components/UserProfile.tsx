@@ -41,7 +41,7 @@ const UserProfile = () => {
     useEthersSigner() as ethers.JsonRpcSigner;
 
   const contractT = new ethers.Contract(
-    "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4",
+    "0x4ffFa4B9Ac841BEf20910caE3d2F52A9D85F4314",
     SkillVouchContract.abi,
     signerT
   );
@@ -56,6 +56,7 @@ const UserProfile = () => {
     setProvider,
     setSigner,
     contract,
+    stageThreeInputs,
   } = useStore();
   useEffect(() => {
     if (contract) {
@@ -74,7 +75,7 @@ const UserProfile = () => {
   const [iconPrompt, setIconPrompt] = useState("User");
 
   const APIURL =
-    "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.3";
+    "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.4";
 
   const [acceptedReqs, setAcceptedReqs] = useState<RequestCreated[]>([]);
 
@@ -225,7 +226,7 @@ const UserProfile = () => {
     <div className="flex flex-col items-center">
       <main className="flex justify-center items-center p-10 m-8">
         {/* Build lamps <br /> the right way */}
-        <NFTGlareCard />
+        <NFTGlareCard acceptedReqs={acceptedReqs} />
 
         {/* <div className="grid gap-2">
               <div className="flex items-center justify-between">

@@ -5,10 +5,15 @@ import "dotenv/config";
 const config: any = {
   solidity: "0.8.24",
   networks: {
-    sepolia: {
-      url: process.env.NETWORK_URL,
-      accounts: [process.env.PRIVATE_KEY],
+    "base-sepolia": {
+      url: "https://sepolia.base.org",
+      accounts: [process.env.PRIVATE_KEY as string],
+      gasPrice: 1000000000,
     },
+    // sepolia: {
+    //   url: process.env.NETWORK_URL,
+    //   accounts: [process.env.PRIVATE_KEY],
+    // },
 
     // sourcify: {
     //   // Disabled by default

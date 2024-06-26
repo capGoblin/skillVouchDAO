@@ -6,9 +6,11 @@ schema:
 dataSources:
   - kind: ethereum
     name: SkillVouchContract
-    network: sepolia
+    # network: sepolia
+    network: base-sepolia
     source:
-      address: "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4"
+      # address: "0xCfB9fCb9b6395B92673C4B15fA8aaDA81dC450b4"
+      address: "0x4ffFa4B9Ac841BEf20910caE3d2F52A9D85F4314"
       abi: SkillVouchContract
       startBlock: 6052335
     mapping:

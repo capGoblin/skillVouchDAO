@@ -15,11 +15,24 @@ import {
 } from "../../constants/subgraphQueries";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
+import { ethers } from "ethers";
+import { useEthersSigner } from "../lib/ethers";
+import SkillVouchContract from "../../artifacts/contracts/SkillVouchContract.sol/SkillVouchContract.json";
 
 const VouchingProcess = () => {
   const { address } = useAccount();
+
+  const signer: ethers.JsonRpcSigner =
+    useEthersSigner() as ethers.JsonRpcSigner;
+
+  const contract = new ethers.Contract(
+    "0x4ffFa4B9Ac841BEf20910caE3d2F52A9D85F4314",
+    SkillVouchContract.abi,
+    signer
+  );
+
   const APIURL =
-    "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.3";
+    "https://api.studio.thegraph.com/query/77624/skillvouchdao/0.0.4";
 
   const [fetch, setFetch] = useState(false);
 
@@ -28,8 +41,6 @@ const VouchingProcess = () => {
     setStageTwoInputs,
     stageThreeInputs,
     setStageThreeInputs,
-    contract,
-    signer,
     linkedInLink,
     githubLink,
   } = useStore();
@@ -114,6 +125,8 @@ const VouchingProcess = () => {
               Number(trueCounts[item.requestId]) === 0 &&
               Number(trueCounts[item.requestId]) === 0
             ) {
+              console.log(item.linkedInLink);
+              console.log(item.gitHubLink);
               return {
                 requestId: Number(item.requestId),
                 skills: item.skill,
@@ -194,14 +207,14 @@ const VouchingProcess = () => {
                 </div>
                 <div className="flex items-center gap-2 mb-4">
                   <a
-                    href={linkedInLink}
+                    href={input.linkedin}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <LinkedinIcon className="h-6 w-6" />
                   </a>
                   <a
-                    href={githubLink}
+                    href={input.github}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
