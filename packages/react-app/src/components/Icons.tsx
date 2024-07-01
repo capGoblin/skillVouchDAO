@@ -1,7 +1,7 @@
 import logoImage from "../../public/logo.jpeg";
 
 export const LogoIcon = () => {
-  return <img src={logoImage} alt="Logo" className="size-11" />;
+  return <img src={logoImage} alt="Logo" className="size-14" />;
 };
 
 export const MedalIcon = () => {
