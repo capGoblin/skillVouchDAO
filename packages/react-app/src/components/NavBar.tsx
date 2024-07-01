@@ -56,7 +56,7 @@ export const Navbar = () => {
             <a
               rel="noreferrer noopener"
               href="/"
-              className="ml-2 font-bold text-xl flex"
+              className="font-bold text-xl flex items-center"
             >
               <LogoIcon />
               SkillVouchDAO
