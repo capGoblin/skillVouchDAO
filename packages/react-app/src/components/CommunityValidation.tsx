@@ -160,7 +160,7 @@ const CommunityValidation = () => {
                   <AvatarFallback>JD</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
-                  <div className="font-semibold">John.ens</div>
+                  <div className="font-semibold">john.eth</div>
                   <div className="text-sm text-gray-500 dark:text-gray-400">
                     Software Engineer
                   </div>

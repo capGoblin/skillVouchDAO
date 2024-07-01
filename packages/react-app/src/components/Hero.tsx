@@ -25,7 +25,7 @@ const Hero = () => {
                 Join a decentralized community where your skills are verified
                 through a trusted network of peers. Stake tokens for validation,
                 get vouched for by experts, and earn tokens for your
-                participation in BASE chain.
+                participation on Zora Network.
               </p>
               <div className="space-y-4 md:space-x-16">
                 {/* <Button
