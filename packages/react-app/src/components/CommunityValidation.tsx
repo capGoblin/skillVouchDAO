@@ -202,7 +202,7 @@ const CommunityValidation = () => {
                   </a>
                 </div>
               </CardContent>
-              {(input.NoOfNoVotes || input.NoOfYesVotes) && (
+              {input.NoOfNoVotes || input.NoOfYesVotes ? (
                 <div className="flex justify-evenly space-x-12 mb-4 mr-5">
                   <div className="w-1/2 mx-5 font-medium text-green-600 flex justify-center">
                     {input.NoOfYesVotes}
@@ -211,7 +211,7 @@ const CommunityValidation = () => {
                     {input.NoOfNoVotes}
                   </div>
                 </div>
-              )}
+              ) : null}
               <div className="flex justify-evenly space-x-12 mb-8 mr-5">
                 <Button
                   className="w-1/2 mx-5 bg-green-600"
