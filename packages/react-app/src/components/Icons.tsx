@@ -1,4 +1,4 @@
-import logoImage from "../../public/logo.jpeg";
+import logoImage from "/logo.jpeg";
 
 export const LogoIcon = () => {
   return <img src={logoImage} alt="Logo" className="size-14" />;
